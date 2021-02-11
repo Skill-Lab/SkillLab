@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,9 +9,9 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-
-
-
+import { auth } from "../../firebase";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/reducers/userSlice";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -50,8 +50,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
   const classes = useStyles();
 
+  const register = (e) => {
+    e.preventDefault();
+
+    //Input validation
+    if (!email) {
+      return alert("Please enter an email");
+    }
+
+    //Creating account with firebase
+    auth.createUserWithEmailAndPassword(email, password).then((userAuth) => {
+      userAuth.user
+        .updateProfile({
+          displayName: firstName 
+        })
+        .then(() => {
+          dispatch(
+            login({
+              email: userAuth.user.email,
+              uid: userAuth.user.uid,
+              displayName: firstName,
+            })
+          );
+        });
+    }).catch((error) => alert(error.message));
+
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -76,6 +106,8 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -98,6 +130,8 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -110,9 +144,10 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>
-            
           </Grid>
           <Button
             type="submit"
@@ -120,6 +155,7 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={register}
           >
             Sign Up
           </Button>
