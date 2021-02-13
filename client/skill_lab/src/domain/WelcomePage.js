@@ -2,7 +2,7 @@ import React from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import { Button, Grid, Link, makeStyles } from "@material-ui/core";
+import { Button, Grid, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   logo_size: {
@@ -27,9 +27,9 @@ export default function WelcomePage() {
         <CardContent>
           <img className={classes.logo_size} src="Skill_Lab_Logo.png" alt="" />
           <Typography variant="h5" component="h2">
-          Creating a Mentorship Community of Shared Skills & Interests
+            Creating a Mentorship Community of Shared Skills & Interests
           </Typography>
-           <br></br>
+          <br></br>
           <Button color="primary" href="/signup">
             Sign Up
           </Button>
