@@ -4,10 +4,11 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from "react-router-dom";
 import SignUp from "../../domain/Authentication/SignUp.js";
 import WelcomePage from "../../domain/WelcomePage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { login, logout } from "../../store/reducers/userSlice";
@@ -15,6 +16,8 @@ import Homepage from "../../domain/Homepage";
 
 function App() {
   const dispatch = useDispatch();
+  const [userState, setUserState] = useState("");
+
   useEffect(() => {
     auth.onAuthStateChanged((userAuth) => {
       if (userAuth) {
@@ -26,12 +29,18 @@ function App() {
             displayName: userAuth.displayName,
           })
         );
+        setUserState({
+          email: userAuth.email,
+          uid: userAuth.uid,
+          displayName: userAuth.displayName,
+        });
       } else {
         //user is logged out
         dispatch(logout());
+        setUserState(null);
       }
     });
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="App">
@@ -39,8 +48,15 @@ function App() {
         <Switch>
           <Route exact path="/" component={WelcomePage} />
           <Route path="/signup" component={SignUp} />
-          <Route exact path="/home" component={Homepage} />
+          <Route
+            exact
+            path="/home"
+            render={(props) => <Homepage {...userState} />}
+          />
           <Route path="/login" component={Login} />
+
+          {/* Routes not specified go to root */}
+          <Route render={() => <Redirect to="/" />} />
         </Switch>
       </Router>
     </div>
