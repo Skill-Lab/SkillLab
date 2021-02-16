@@ -13,6 +13,7 @@ import { auth } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { login, logout } from "../../store/reducers/userSlice";
 import Homepage from "../../domain/Homepage";
+import Navbar from "../Navbar";
 
 function App() {
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ function App() {
 
   return (
     <div className="App">
+      <Navbar />
       <Router>
         <Switch>
           <Route exact path="/" component={WelcomePage} />
