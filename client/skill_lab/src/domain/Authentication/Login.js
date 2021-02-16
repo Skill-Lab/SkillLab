@@ -12,6 +12,7 @@ import Container from "@material-ui/core/Container";
 import { auth } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/reducers/userSlice";
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -55,7 +56,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
 
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const classes = useStyles();
 
   //Use firebase to log user into app
@@ -71,7 +72,9 @@ export default function Login() {
           displayName: userAuth.user.displayName
         })
       );
+      history.push("/home")
     })
+
     .catch((error) => alert(error));
 
   };

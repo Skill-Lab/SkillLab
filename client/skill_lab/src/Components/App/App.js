@@ -6,10 +6,8 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import { useSelector } from "react-redux";
 import SignUp from "../../domain/Authentication/SignUp.js";
 import WelcomePage from "../../domain/WelcomePage";
-import { selectUser } from "../../store/reducers/userSlice";
 import { useEffect } from "react";
 import { auth } from "../../firebase";
 import { useDispatch } from "react-redux";
@@ -17,8 +15,8 @@ import { login, logout } from "../../store/reducers/userSlice";
 import Homepage from "../../domain/Homepage";
 
 function App() {
-  const user = useSelector(selectUser);
   const dispatch = useDispatch();
+
   useEffect(() => {
     auth.onAuthStateChanged((userAuth) => {
       if (userAuth) {
@@ -35,18 +33,19 @@ function App() {
         dispatch(logout());
       }
     });
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="App">
       <Router>
-        
-
         <Switch>
           <Route exact path="/" component={WelcomePage} />
           <Route path="/signup" component={SignUp} />
-          <Route exact path="/home" component={Homepage} />
+          <Route path="/home" component={Homepage} />
           <Route path="/login" component={Login} />
+
+          {/* Routes not specified go to root */}
+          <Route render={() => <Redirect to="/" />} />
         </Switch>
       </Router>
     </div>

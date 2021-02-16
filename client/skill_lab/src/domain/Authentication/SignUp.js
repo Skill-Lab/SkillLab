@@ -12,6 +12,7 @@ import Container from "@material-ui/core/Container";
 import { auth } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/reducers/userSlice";
+import { useHistory } from "react-router-dom";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -53,7 +54,11 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [password, setPassword] = useState("");
+
+  const history = useHistory();
+
   const dispatch = useDispatch();
+
   const classes = useStyles();
 
   const register = (e) => {
@@ -78,7 +83,9 @@ export default function SignUp() {
               displayName: firstName,
             })
           );
+          history.push("/home")
         });
+
     }).catch((error) => alert(error.message));
 
   };
