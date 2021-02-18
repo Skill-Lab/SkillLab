@@ -3,6 +3,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
+import Post from "../components/Feed/Post";
 import { auth } from "../firebase";
 import { logout, selectUser } from "../store/reducers/userSlice";
 
@@ -45,6 +46,7 @@ export default function Homepage() {
         <Toolbar />
         <h1>HomePage</h1>
         <h3>Hello {user.displayName}</h3>
+        <Post />
         <Button onClick={signout}>Logout</Button>
       </main>
     </div>
