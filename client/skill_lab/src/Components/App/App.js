@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { login, logout } from "../../store/reducers/userSlice";
 import Homepage from "../../domain/Homepage";
 import Navbar from "../Navbar";
+import InterestPage from "../../domain/InterestsPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ function App() {
           <Route path="/signup" component={SignUp} />
           <Route path="/home" component={Homepage} />
           <Route path="/login" component={Login} />
+          <Route path="/interestPage" component={InterestPage} />
 
           {/* Routes not specified go to root */}
           <Route render={() => <Redirect to="/" />} />
