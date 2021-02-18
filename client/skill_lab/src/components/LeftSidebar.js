@@ -1,16 +1,11 @@
 import {
   Divider,
   Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   makeStyles,
   Toolbar,
 } from "@material-ui/core";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import React from "react";
+import SimpleAccordion from "./SimpleAccordion";
 
 const drawerWidth = 240;
 
@@ -40,28 +35,18 @@ export default function LeftSidebar() {
         }}
       >
         <Toolbar />
+        <Divider />
         <div className={classes.drawerContainer}>
-          <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+          <SimpleAccordion
+            name="Groups"
+            list={["Bilogy", "Chemistry", "Computer Science", "Geology"]}
+          />
+
           <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+          <SimpleAccordion
+            name="Mentors"
+            list={["Bob", "John", "Susan", "Jack"]}
+          />
         </div>
       </Drawer>
     </div>
