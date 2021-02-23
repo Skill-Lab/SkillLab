@@ -29,13 +29,6 @@ export default function Homepage() {
   //If not logged in, redirect user to home page
   if (!user) return <Redirect to="/" />;
 
-  //Handle logout function from firebase & redux
-  const signout = () => {
-    dispatch(logout);
-    auth.signOut();
-    history.push("/");
-  };
-
   return (
     <div className={classes.root}>
       <LeftSidebar />
@@ -45,7 +38,6 @@ export default function Homepage() {
         <Toolbar />
         <h1>HomePage</h1>
         <h3>Hello {user.displayName}</h3>
-        <Button onClick={signout}>Logout</Button>
       </main>
     </div>
   );
