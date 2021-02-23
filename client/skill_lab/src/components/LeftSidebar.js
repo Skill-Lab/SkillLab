@@ -39,7 +39,7 @@ export default function LeftSidebar() {
         <div className={classes.drawerContainer}>
           <SimpleAccordion
             name="Groups"
-            list={["Bilogy", "Chemistry", "Computer Science", "Geology"]}
+            list={["Biology", "Chemistry", "Computer Science", "Geology"]}
           />
 
           <Divider />

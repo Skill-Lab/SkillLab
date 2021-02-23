@@ -31,7 +31,7 @@ export default function SimpleAccordion({ name, list }) {
         >
           <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
-        {list.map((text, index) => (
+        {list.map((text) => (
           <AccordionDetails>
             <ListItem button key={text}>
               <ListItemIcon>
