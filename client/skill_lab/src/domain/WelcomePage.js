@@ -3,6 +3,9 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Button, Grid, makeStyles } from "@material-ui/core";
+import { useSelector } from "react-redux";
+import { selectUser } from "../store/reducers/userSlice";
+import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   logo_size: {
@@ -13,6 +16,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function WelcomePage() {
   const classes = useStyles();
+  //Retrieve User
+  const user = useSelector(selectUser);
+
+  //Check if user logged in
+  //If logged in, redirect user to home page
+  if (user) return <Redirect to="/home" />;
 
   return (
     <Grid
@@ -30,12 +39,6 @@ export default function WelcomePage() {
             Creating a Mentorship Community of Shared Skills & Interests
           </Typography>
           <br></br>
-          <Button color="primary" href="/signup">
-            Sign Up
-          </Button>
-          <Button color="primary" href="/login">
-            Login
-          </Button>
         </CardContent>
       </Card>
     </Grid>

@@ -1,13 +1,9 @@
-import {
-  AppBar,
-  Avatar,
-  Button,
-  IconButton,
-  makeStyles,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
+import { AppBar, Avatar, Button, makeStyles, Toolbar } from "@material-ui/core";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectUser } from "../store/reducers/userSlice";
+import { auth } from "../firebase";
+import  { Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,10 +11,9 @@ const useStyles = makeStyles((theme) => ({
   },
   navbar: {
     zIndex: theme.zIndex.drawer + 1,
-    background: 'white',
+    background: "white",
     opacity: "0.93",
     boxShadow: "0px 0.5px 7px -1px rgba(0,0,0,0.3)",
-    
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -43,26 +38,50 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar() {
+  //Retrieve User
+  const user = useSelector(selectUser);
+
+  const dispatch = useDispatch();
+
   const classes = useStyles();
+  const icon_Logo = (
+    <Avatar
+      alt="Logo"
+      src="Skill_Lab_Logo.png"
+      href="/"
+      className={classes.logo_size}
+    />
+  );
+  //Handle logout function from firebase & redux
+  const signout = () => {
+    dispatch(logout);
+    auth.signOut();
+    <Redirect to='/'  />
+  };
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.navbar} >
+      <AppBar position="fixed" className={classes.navbar}>
         <Toolbar className={classes.toolbar}>
-          {/* TODO: Have button redirect to welcomepage "/" */}
-          <Button>
-            <Avatar
-              alt="Logo"
-              src="Skill_Lab_Logo.png"
-              className={classes.logo_size}
-            />
-          </Button>
-          {/* <Typography variant="h6" className={classes.title}>
-            News
-          </Typography> */}
-          <div className={classes.rightButtons}>
-            <Button color="white">Login</Button>
-            <Button color="white">Signup</Button>
-          </div>
+          <Button startIcon={icon_Logo} href="/"></Button>
+
+          {/* Check if user is signed in or not */}
+          {!user ? (
+            //User is not signed in
+            //Display Login/SignUp
+            <div className={classes.rightButtons}>
+              <Button href="/login">Login</Button>
+              <Button href="/signup">Signup</Button>
+            </div>
+          ) : (
+            //User is logged in
+            //Display interests, logout on navbar
+            <div className={classes.rightButtons}>
+              <Button href="/interestPage">Interests</Button>
+              <Button  onClick={signout}>
+                Logout
+              </Button>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
     </div>
