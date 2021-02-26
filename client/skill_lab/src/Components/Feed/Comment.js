@@ -2,23 +2,13 @@ import React from "react";
 import {
   Avatar,
   Box,
-  Button,
   Card,
-  CardActions,
   CardContent,
-  CardHeader,
   Grid,
-  TextField,
   Typography,
   IconButton,
-  Input,
-  InputAdornment,
-  FormControl,
 } from "@material-ui/core";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
-import ShareIcon from "@material-ui/icons/Share";
-import ReportIcon from "@material-ui/icons/Report";
-import SendIcon from "@material-ui/icons/Send";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,15 +25,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getInitials(fullName) {
-  var splitNames = ("" + fullName).split(" ");
-  var initials = "";
-  for (const name of splitNames) {
-    initials += name.charAt(0);
-  }
+// function getInitials(fullName) {
+//   var splitNames = ("" + fullName).split(" ");
+//   var initials = "";
+//   for (const name of splitNames) {
+//     initials += name.charAt(0);
+//   }
 
-  return initials;
-}
+//   return initials;
+// }
 
 export default function Comment({ name, message, timestamp }) {
   const classes = useStyles();
