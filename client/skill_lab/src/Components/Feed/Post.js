@@ -91,9 +91,9 @@ export default function Post() {
           </Typography>
         </CardContent>
         <CardActions>
-          <Box mx={1} mb={1}>
-            <Grid container spacing={3}>
-              <Grid item xs>
+          <Box width={1} mx={1} mb={1}>
+            <Grid container justify="center" spacing={6}>
+              <Grid item>
                 <Button
                   color="secondary"
                   size="small"
@@ -102,32 +102,32 @@ export default function Post() {
                   Kudos
                 </Button>
               </Grid>
-              <Grid item xs>
+              <Grid item>
                 <Button color="primary" size="small" startIcon={<ShareIcon />}>
                   Share
                 </Button>
               </Grid>
-              <Grid item xs>
+              <Grid item>
                 <Button size="small" startIcon={<ReportIcon />}>
                   Report
                 </Button>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  placeholder="Add a comment..."
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment>
-                        <IconButton>
-                          <SendIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
             </Grid>
+            <Box mt={2}>
+              <TextField
+                fullWidth
+                placeholder="Add a comment..."
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment>
+                      <IconButton>
+                        <SendIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
           </Box>
         </CardActions>
       </Card>
