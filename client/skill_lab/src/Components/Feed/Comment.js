@@ -64,7 +64,7 @@ export default function Comment({ name, message, timestamp, kudosCount }) {
                 </Grid>
               </Grid>
               <Grid item>
-                <Typography variant="caption">5</Typography>
+                <Typography variant="caption">{kudosCount}</Typography>
                 <IconButton size="small" color="secondary">
                   <WhatshotIcon />
                 </IconButton>

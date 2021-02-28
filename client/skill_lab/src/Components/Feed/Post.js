@@ -12,6 +12,7 @@ import {
   Typography,
   IconButton,
   InputAdornment,
+  Container,
 } from "@material-ui/core";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import ShareIcon from "@material-ui/icons/Share";
@@ -42,6 +43,7 @@ function createComments(commentsData) {
         name={comment.name}
         message={comment.message}
         timestamp={comment.timestamp}
+        kudosCount={comment.kudosCount}
       />
     );
   });
@@ -57,20 +59,24 @@ export default function Post() {
       name: "Cindy Carrillo",
       message: "This is the first comment",
       timestamp: "Today",
+      kudosCount: 8,
     },
     {
       name: "Nathan Abegaz",
       message: "This is the second comment",
       timestamp: "Yesterday",
+      kudosCount: 79,
     },
     {
       name: "Alexis Huerta",
       message: "This is the third comment",
       timestamp: "Last Friday",
+      kudosCount: 301,
     },
   ];
 
   return (
+    // <Box mx="auto" bgcolor="skyblue">
     <Card className={classes.root} variant="outlined">
       <Card className={classes.content} variant="outlined">
         <CardHeader
@@ -133,5 +139,6 @@ export default function Post() {
       </Card>
       <>{createComments(commentsData)}</>
     </Card>
+    // </Box>
   );
 }
