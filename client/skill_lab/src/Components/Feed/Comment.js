@@ -35,48 +35,36 @@ const useStyles = makeStyles((theme) => ({
 //   return initials;
 // }
 
-export default function Comment({ name, message, timestamp }) {
+export default function Comment({ name, message, timestamp, kudosCount }) {
   const classes = useStyles();
 
-  // const name = "Cindy Carrillo";
-  // const message = "This is a comment";
-  // const timestamp = "Yesterday";
-
   return (
-    // <Card variant="outlined">
-    // <div>
-    //   <CardHeader
-    //     className={classes.header}
-    //     avatar={<Avatar></Avatar>}
-    //     title={name}
-    //     subheader={timestamp}
-    //   />
-    //   <CardContent>
-    //     <Typography className="body" variant="body2" align="left">
-    //       {message}
-    //     </Typography>
-    //   </CardContent>
-    // </div>
     <div>
       <Card className={classes.card}>
         <CardContent>
           <Box px={1}>
-            <Grid container spacing={1}>
-              <Grid item xs={1}>
-                <Avatar alt={name} className={classes.avatar_small}></Avatar>
+            <Grid container justify="space-between">
+              <Grid item container xs={10}>
+                <Grid item>
+                  <Box mr={1}>
+                    <Avatar
+                      alt={name}
+                      className={classes.avatar_small}
+                    ></Avatar>
+                  </Box>
+                </Grid>
+                <Grid item className={classes.comment_content}>
+                  <Typography className="commenterName" variant="subtitle">
+                    {name} •&nbsp;
+                  </Typography>
+                  <Typography className="timestamp" variant="caption">
+                    {timestamp}
+                  </Typography>
+                  <Typography variant="body2">{message}</Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={10} className={classes.comment_content}>
-                {/* <div className="comment-header-container"> */}
-                <Typography className="commenterName" variant="subtitle">
-                  {name} •&nbsp;
-                </Typography>
-                <Typography className="timestamp" variant="caption">
-                  {timestamp}
-                </Typography>
-                <Typography variant="body2">{message}</Typography>
-                {/* </div> */}
-              </Grid>
-              <Grid item xs={1}>
+              <Grid item>
+                <Typography variant="caption">{kudosCount}</Typography>
                 <IconButton size="small" color="secondary">
                   <WhatshotIcon />
                 </IconButton>

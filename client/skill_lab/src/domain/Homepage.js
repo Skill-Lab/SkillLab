@@ -1,4 +1,7 @@
-import { Button, CssBaseline, makeStyles, Toolbar } from "@material-ui/core";
+import { Box, CssBaseline, Fab, makeStyles, Toolbar } from "@material-ui/core";
+import CreateIcon from "@material-ui/icons/Create";
+import { deepOrange } from "@material-ui/core/colors";
+
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
@@ -11,9 +14,15 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
+  extendedIcon: {
+    marginRight: theme.spacing(1),
+  },
+  fab: {
+    color: theme.palette.common.white,
+    backgroundColor: deepOrange[600],
+    position: "fixed",
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
   },
 }));
 
@@ -35,12 +44,17 @@ export default function Homepage() {
       <LeftSidebar />
       <CssBaseline />
 
-      <main className={classes.content}>
-        <Toolbar />
-        {/* <h1>HomePage</h1>
+      {/* <h1>HomePage</h1>
         <h3>Hello {user.displayName}</h3> */}
+      <Box mx="auto" p={5}>
+        <Toolbar />
+
         <Post />
-      </main>
+      </Box>
+      <Fab variant="extended" className={classes.fab}>
+        <CreateIcon className={classes.extendedIcon} />
+        New Post
+      </Fab>
     </div>
   );
 }

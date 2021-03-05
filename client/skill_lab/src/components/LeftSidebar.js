@@ -1,9 +1,4 @@
-import {
-  Divider,
-  Drawer,
-  makeStyles,
-  Toolbar,
-} from "@material-ui/core";
+import { Divider, Drawer, makeStyles, Toolbar } from "@material-ui/core";
 import React from "react";
 import SimpleAccordion from "./SimpleAccordion";
 
