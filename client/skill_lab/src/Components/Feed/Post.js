@@ -1,5 +1,8 @@
 import React from "react";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Avatar,
   Box,
   Button,
@@ -14,6 +17,7 @@ import {
   InputAdornment,
   Container,
 } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import ShareIcon from "@material-ui/icons/Share";
 import ReportIcon from "@material-ui/icons/Report";
@@ -39,12 +43,14 @@ const useStyles = makeStyles({
 function createComments(commentsData) {
   let comments = commentsData.map((comment) => {
     return (
-      <Comment
-        name={comment.name}
-        message={comment.message}
-        timestamp={comment.timestamp}
-        kudosCount={comment.kudosCount}
-      />
+      <AccordionDetails>
+        <Comment
+          name={comment.name}
+          message={comment.message}
+          timestamp={comment.timestamp}
+          kudosCount={comment.kudosCount}
+        />
+      </AccordionDetails>
     );
   });
 
@@ -137,7 +143,12 @@ export default function Post() {
           </Box>
         </CardActions>
       </Card>
-      <>{createComments(commentsData)}</>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className={classes.heading}>Comments</Typography>
+        </AccordionSummary>
+        <>{createComments(commentsData)}</>
+      </Accordion>
     </Card>
     // </Box>
   );

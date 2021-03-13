@@ -12,6 +12,9 @@ import WhatshotIcon from "@material-ui/icons/Whatshot";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+  },
   header: {
     textAlign: "start",
   },
@@ -39,14 +42,14 @@ export default function Comment({ name, message, timestamp, kudosCount }) {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className={classes.root}>
       <Card className={classes.card}>
         <CardContent>
-          <Box px={1}>
+          <Box>
             <Grid container justify="space-between">
               <Grid item container xs={10}>
                 <Grid item>
-                  <Box mr={1}>
+                  <Box mr={2}>
                     <Avatar
                       alt={name}
                       className={classes.avatar_small}

@@ -39,6 +39,11 @@ export default function Homepage() {
   //If not logged in, redirect user to home page
   if (!user) return <Redirect to="/" />;
 
+  // todo: method to pull post data
+  // store posts in state
+
+  // todo: method to push new post data to database?
+
   return (
     <div className={classes.root}>
       <LeftSidebar />

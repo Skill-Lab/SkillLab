@@ -70,34 +70,31 @@ export default function SignUp() {
     }
 
     //Creating account with firebase
-    auth.createUserWithEmailAndPassword(email, password).then((userAuth) => {
-      userAuth.user
-        .updateProfile({
-          displayName: firstName 
-        })
-        .then(() => {
-          dispatch(
-            login({
-              email: userAuth.user.email,
-              uid: userAuth.user.uid,
-              displayName: firstName,
-            })
-          );
-          history.push("/home")
-        });
-
-    }).catch((error) => alert(error.message));
-
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userAuth) => {
+        userAuth.user
+          .updateProfile({
+            displayName: firstName,
+          })
+          .then(() => {
+            dispatch(
+              login({
+                email: userAuth.user.email,
+                uid: userAuth.user.uid,
+                displayName: firstName,
+              })
+            );
+            history.push("/home");
+          });
+      })
+      .catch((error) => alert(error.message));
   };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar
-          alt="Remy Sharp"
-          src="Skill_Lab_Logo.png"
-          className={classes.logo_size}
-        />
+        <Avatar src="Skill_Lab_Logo.png" className={classes.logo_size} />
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
