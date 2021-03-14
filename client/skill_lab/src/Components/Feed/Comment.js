@@ -38,14 +38,28 @@ const useStyles = makeStyles((theme) => ({
 //   return initials;
 // }
 
-export default function Comment({ name, message, timestamp, kudosCount }) {
+export default function Comment({
+  name,
+  message,
+  timestamp,
+  kudosCount,
+  kudosGiven,
+}) {
   const classes = useStyles();
+
+  const [kc, setKudosCount] = React.useState(kudosCount);
+  const [kg, setKudosGiven] = React.useState(kudosGiven);
+
+  const setKudos = () => {
+    setKudosCount(kg ? kc - 1 : kc + 1);
+    setKudosGiven(!kg);
+  };
 
   return (
     <div className={classes.root}>
       <Card className={classes.card}>
         <CardContent>
-          <Box>
+          <Box my={-2} mx={-1}>
             <Grid container justify="space-between">
               <Grid item container xs={10}>
                 <Grid item>
@@ -57,9 +71,11 @@ export default function Comment({ name, message, timestamp, kudosCount }) {
                   </Box>
                 </Grid>
                 <Grid item className={classes.comment_content}>
-                  <Typography className="commenterName" variant="subtitle">
-                    {name} •&nbsp;
-                  </Typography>
+                  <Box display="inline-block">
+                    <Typography className="commenterName" variant="subtitle2">
+                      {name} •&nbsp;
+                    </Typography>
+                  </Box>
                   <Typography className="timestamp" variant="caption">
                     {timestamp}
                   </Typography>
@@ -67,8 +83,12 @@ export default function Comment({ name, message, timestamp, kudosCount }) {
                 </Grid>
               </Grid>
               <Grid item>
-                <Typography variant="caption">{kudosCount}</Typography>
-                <IconButton size="small" color="secondary">
+                <Typography variant="caption">{kc}</Typography>
+                <IconButton
+                  size="small"
+                  color={kg ? "secondary" : ""}
+                  onClick={setKudos}
+                >
                   <WhatshotIcon />
                 </IconButton>
               </Grid>

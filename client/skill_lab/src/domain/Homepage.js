@@ -26,6 +26,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// function createPosts(postsData) {
+//   let posts = postsData.map((post) => {
+//     return <Post />;
+//   });
+// }
+
 export default function Homepage() {
   const classes = useStyles();
 
@@ -41,6 +47,29 @@ export default function Homepage() {
 
   // todo: method to pull post data
   // store posts in state
+  var commentsData = [
+    {
+      name: "Cindy Carrillo",
+      message: "This is the first comment",
+      timestamp: "Today",
+      kudosCount: 8,
+      kudosGiven: false,
+    },
+    {
+      name: "Nathan Abegaz",
+      message: "This is the second comment",
+      timestamp: "Yesterday",
+      kudosCount: 79,
+      kudosGiven: false,
+    },
+    {
+      name: "Alexis Huerta",
+      message: "This is the third comment",
+      timestamp: "Last Friday",
+      kudosCount: 301,
+      kudosGiven: true,
+    },
+  ];
 
   // todo: method to push new post data to database?
 
@@ -54,7 +83,7 @@ export default function Homepage() {
       <Box mx="auto" p={5}>
         <Toolbar />
 
-        <Post />
+        <Post commentsData={commentsData} />
       </Box>
       <Fab variant="extended" className={classes.fab}>
         <CreateIcon className={classes.extendedIcon} />
