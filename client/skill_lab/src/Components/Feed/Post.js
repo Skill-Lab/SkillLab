@@ -79,6 +79,7 @@ export default function Post(commentsData) {
       kudosGiven: false,
     });
     setComments(createComments(cd));
+    setNewComment("");
   };
 
   return (
@@ -130,8 +131,10 @@ export default function Post(commentsData) {
                 id="textfield-comment"
                 fullWidth
                 placeholder="Add a comment..."
+                multiline
                 variant="outlined"
                 size="small"
+                value={newComment}
                 onChange={(event) => setNewComment(event.target.value)}
                 InputProps={{
                   endAdornment: (

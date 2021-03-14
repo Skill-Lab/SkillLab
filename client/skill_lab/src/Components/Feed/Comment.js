@@ -60,7 +60,7 @@ export default function Comment({
     <div className={classes.root}>
       <Card className={classes.card}>
         <CardContent>
-          <Box my={-2} mx={-1}>
+          <Box m={-2}>
             <Grid container justify="space-between">
               <Grid item container xs={10}>
                 <Grid item>
