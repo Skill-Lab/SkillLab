@@ -12,6 +12,9 @@ import WhatshotIcon from "@material-ui/icons/Whatshot";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+  },
   header: {
     textAlign: "start",
   },
@@ -35,18 +38,33 @@ const useStyles = makeStyles((theme) => ({
 //   return initials;
 // }
 
-export default function Comment({ name, message, timestamp, kudosCount }) {
+export default function Comment({
+  name,
+  message,
+  timestamp,
+  kudosCount,
+  kudosGiven,
+}) {
   const classes = useStyles();
+  var { DateTime } = require("luxon");
+
+  const [kc, setKudosCount] = React.useState(kudosCount);
+  const [kg, setKudosGiven] = React.useState(kudosGiven);
+
+  const setKudos = () => {
+    setKudosCount(kg ? kc - 1 : kc + 1);
+    setKudosGiven(!kg);
+  };
 
   return (
-    <div>
+    <div className={classes.root}>
       <Card className={classes.card}>
         <CardContent>
-          <Box px={1}>
+          <Box my={-2} mx={-1}>
             <Grid container justify="space-between">
               <Grid item container xs={10}>
                 <Grid item>
-                  <Box mr={1}>
+                  <Box mr={2}>
                     <Avatar
                       alt={name}
                       className={classes.avatar_small}
@@ -54,18 +72,26 @@ export default function Comment({ name, message, timestamp, kudosCount }) {
                   </Box>
                 </Grid>
                 <Grid item className={classes.comment_content}>
-                  <Typography className="commenterName" variant="subtitle">
-                    {name} •&nbsp;
-                  </Typography>
+                  <Box display="inline-block">
+                    <Typography className="commenterName" variant="subtitle2">
+                      {name} •&nbsp;
+                    </Typography>
+                  </Box>
                   <Typography className="timestamp" variant="caption">
-                    {timestamp}
+                    {DateTime.fromISO(timestamp).toLocaleString(
+                      DateTime.DATETIME_SHORT
+                    )}
                   </Typography>
                   <Typography variant="body2">{message}</Typography>
                 </Grid>
               </Grid>
               <Grid item>
-                <Typography variant="caption">{kudosCount}</Typography>
-                <IconButton size="small" color="secondary">
+                <Typography variant="caption">{kc}</Typography>
+                <IconButton
+                  size="small"
+                  color={kg ? "secondary" : "default"}
+                  onClick={setKudos}
+                >
                   <WhatshotIcon />
                 </IconButton>
               </Grid>

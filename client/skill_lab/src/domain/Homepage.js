@@ -26,6 +26,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// function createPosts(postsData) {
+//   let posts = postsData.map((post) => {
+//     return <Post />;
+//   });
+// }
+
 export default function Homepage() {
   const classes = useStyles();
 
@@ -39,6 +45,34 @@ export default function Homepage() {
   //If not logged in, redirect user to home page
   if (!user) return <Redirect to="/" />;
 
+  // todo: method to pull post data
+  // store posts in state
+  var commentsData = [
+    {
+      name: "Cindy Carrillo",
+      message: "This is the first comment",
+      timestamp: "2020-05-15T08:30:10",
+      kudosCount: 8,
+      kudosGiven: false,
+    },
+    {
+      name: "Nathan Abegaz",
+      message: "This is the second comment",
+      timestamp: "2021-02-11T11:33:30",
+      kudosCount: 79,
+      kudosGiven: false,
+    },
+    {
+      name: "Alexis Huerta",
+      message: "This is the third comment",
+      timestamp: "2021-01-09T15:01:12",
+      kudosCount: 301,
+      kudosGiven: true,
+    },
+  ];
+
+  // todo: method to push new post data to database?
+
   return (
     <div className={classes.root}>
       <LeftSidebar />
@@ -49,7 +83,7 @@ export default function Homepage() {
       <Box mx="auto" p={5}>
         <Toolbar />
 
-        <Post />
+        <Post commentsData={commentsData} />
       </Box>
       <Fab variant="extended" className={classes.fab}>
         <CreateIcon className={classes.extendedIcon} />
