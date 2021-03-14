@@ -64,6 +64,7 @@ function createComments(cd) {
 export default function Post(commentsData) {
   const classes = useStyles();
   const user = useSelector(selectUser);
+  var { DateTime } = require("luxon");
   const cd = commentsData.commentsData;
 
   const [comments, setComments] = React.useState(createComments(cd));
@@ -73,7 +74,7 @@ export default function Post(commentsData) {
     cd.push({
       name: user.displayName,
       message: newComment,
-      timestamp: Date.now(),
+      timestamp: DateTime.now().toString(),
       kudosCount: 0,
       kudosGiven: false,
     });
@@ -88,7 +89,7 @@ export default function Post(commentsData) {
           className={classes.header}
           avatar={<Avatar>BT</Avatar>}
           title="Brian Tao"
-          subheader="Feb 19, 2021"
+          subheader={DateTime.now().toLocaleString(DateTime.DATETIME_MED)}
         />
         <CardContent>
           <Typography className="body" variant="body2" align="left">

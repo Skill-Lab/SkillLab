@@ -46,6 +46,7 @@ export default function Comment({
   kudosGiven,
 }) {
   const classes = useStyles();
+  var { DateTime } = require("luxon");
 
   const [kc, setKudosCount] = React.useState(kudosCount);
   const [kg, setKudosGiven] = React.useState(kudosGiven);
@@ -77,7 +78,9 @@ export default function Comment({
                     </Typography>
                   </Box>
                   <Typography className="timestamp" variant="caption">
-                    {timestamp}
+                    {DateTime.fromISO(timestamp).toLocaleString(
+                      DateTime.DATETIME_SHORT
+                    )}
                   </Typography>
                   <Typography variant="body2">{message}</Typography>
                 </Grid>
@@ -86,7 +89,7 @@ export default function Comment({
                 <Typography variant="caption">{kc}</Typography>
                 <IconButton
                   size="small"
-                  color={kg ? "secondary" : ""}
+                  color={kg ? "secondary" : "default"}
                   onClick={setKudos}
                 >
                   <WhatshotIcon />
