@@ -9,7 +9,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/reducers/userSlice";
 import { useHistory } from "react-router-dom";
@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
 
   const history = useHistory();
@@ -75,19 +76,29 @@ export default function SignUp() {
       .then((userAuth) => {
         userAuth.user
           .updateProfile({
-            displayName: firstName,
+            displayName: firstName + " " + lastName,
           })
           .then(() => {
             dispatch(
               login({
                 email: userAuth.user.email,
                 uid: userAuth.user.uid,
-                displayName: firstName,
+                displayName: firstName + " " + lastName,
               })
             );
             history.push("/home");
+            db.collection('users').doc(userAuth.user.uid).set({
+              firstName: firstName,
+              lastName: lastName,
+              email: userAuth.user.email,
+              posts: [],
+              comments: [],
+              mentors: [],
+              groups: []
+
+            });
           });
-      })
+      }) 
       .catch((error) => alert(error.message));
   };
   return (
@@ -123,6 +134,7 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                onChange={(e) => setLastName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
