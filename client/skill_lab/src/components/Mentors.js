@@ -42,14 +42,14 @@ const goToProfile =(mentorID) => {
         >
           <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
-        {list.map((text) => (
+        {list.map((mentor) => (
           
-          <AccordionDetails>
-            <ListItem  value={text} button key={text}>
+          <AccordionDetails key={mentor.id}>
+            <ListItem  value={mentor.name} button >
               <ListItemIcon>
                 <AccountCircleIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={mentor.name} />
             </ListItem>
           </AccordionDetails>
         ))}
