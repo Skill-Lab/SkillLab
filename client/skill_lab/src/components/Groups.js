@@ -28,6 +28,8 @@ export default function Groups({ name, list }) {
   
   //Direct to group subspace page
   const goToSubspace =(subspaceName) => {
+    subspaceName = subspaceName.toLowerCase();
+    
    history.push({
        pathname: `/subspace/${subspaceName}`
    })
