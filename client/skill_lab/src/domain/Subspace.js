@@ -20,13 +20,17 @@ const useStyles = makeStyles((theme) => ({
 export default function Subspace() {
   const classes = useStyles();
 
-  let { subspaceName } = useParams();
-  subspaceName = subspaceName.toLowerCase(); //set param to all lowercase
+  
   
   const [description, setDescription] = useState();
   const [members, setMembers] = useState();
   const [mentors, setMentors] = useState();
   const [posts, setPosts] = useState();
+
+  // const [subspaceName, setSubspaceName] = useState();
+  // setSubspaceName(useParams());
+
+  var {subspaceName} = useParams();
 
   //Make retrieve data from db
   useEffect(() => {
@@ -42,12 +46,14 @@ export default function Subspace() {
       } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
+          setDescription("") 
+
       }
   }).catch((error) => {
       console.log("Error getting document:", error);
   });
   
-  }, []);
+  }, [subspaceName]);
 
   //Retrieve User
   const user = useSelector(selectUser);
