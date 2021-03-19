@@ -15,6 +15,7 @@ import { login, logout } from "../../store/reducers/userSlice";
 import Homepage from "../../domain/Homepage";
 import Navbar from "../Navbar";
 import InterestPage from "../../domain/InterestsPage";
+import UserProfile from "../../domain/UserProfile";
 import Subspace from "../../domain/Subspace";
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/interestPage" component={InterestPage} />
           <Route path="/subspace/:subspaceName" component={Subspace} />
+          <Route path="/userProfile" component={UserProfile} />
           {/* Routes not specified go to root */}
           <Route render={() => <Redirect to="/" />} />
         </Switch>
