@@ -3,25 +3,24 @@ import { Grid, makeStyles } from "@material-ui/core";
 import LeftSidebar from "../components/LeftSidebar";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import { yellow } from "@material-ui/core/colors";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
-  logo_size: {
-    width: "50%",
-    height: "50%",
+
+  title: {
+    padding: theme.spacing(10),
+    paddingLeft:theme.spacing(90),
+    fontWeight: "bold",
+    color: "#ffa366",
+    fontFamily: "Verdana ",
+    fontSize: 20,  
   },
 
   content: {
-    //padding: theme.spacing(10),
-    marginLeft: "50px",
-  },
-  title: {
-    fontWeight: "bold",
-    padding: theme.spacing(10),
-    color: "#ffa366",
-    fontFamily: "Verdana",
-    fontSize: 20,
-  },
+    margin: 'auto',
+    paddingLeft:theme.spacing(60),
+},
+
   buttonColor: {
     "&.Mui-selected": {
       backgroundColor: "#ff6666",
@@ -46,7 +45,7 @@ export default function InterestPage() {
     <div className={classes.root}>
       <LeftSidebar />
 
-      <div className={classes.title}> Select at least 3 interests</div>
+      <div  className={classes.title}> Select at least 3 interests</div>
 
       <div className={classes.content}>
         <Grid container spacing={8}>
@@ -130,6 +129,15 @@ export default function InterestPage() {
             </div>
           </Grid>
         </Grid>
+
+        <Button
+            type="submit"
+            variant="contained"
+            className={classes.submit}
+            //onClick={}
+          >
+            Submit
+          </Button>
       </div>
     </div>
   );
