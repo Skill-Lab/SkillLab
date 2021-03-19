@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../store/reducers/userSlice";
 import { auth } from "../firebase";
 import  { Redirect } from 'react-router-dom'
+import IconButton from '@material-ui/core/IconButton';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,6 +73,15 @@ export default function Navbar() {
             <div className={classes.rightButtons}>
               <Button href="/login">Login</Button>
               <Button href="/signup">Signup</Button>
+
+              <IconButton
+                href="/userProfile"
+                //onClick={handleMenu}
+                color="#ff5c5c"
+              >
+                <AccountCircle />
+                </IconButton>
+
             </div>
           ) : (
             //User is logged in
