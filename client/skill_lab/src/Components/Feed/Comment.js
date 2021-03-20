@@ -40,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Comment({
   name,
-  message,
   timestamp,
+  message,
   kudosCount,
   kudosGiven,
 }) {
