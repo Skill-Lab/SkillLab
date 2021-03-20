@@ -25,15 +25,15 @@ const goToSubspace = (subspaceName) => {
   console.log(subspaceName);
 };
 export default function Mentors({ name, list }) {
- const history = useHistory();
- const classes = useStyles();
+  const history = useHistory();
+  const classes = useStyles();
 
- //Direct to user profile page
-const goToProfile =(mentorID) => {
+  //Direct to user profile page
+  const goToProfile = (mentorID) => {
     history.push({
-        pathname: `/userPorfile/${mentorID}}`
-    })
-   }
+      pathname: `/userPorfile/${mentorID}}`,
+    });
+  };
 
   return (
     <div className={classes.root}>
@@ -46,11 +46,6 @@ const goToProfile =(mentorID) => {
           <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
         {list.map((text) => (
-<<<<<<< HEAD
-          
-          <AccordionDetails>
-            <ListItem  value={text} button key={text}>
-=======
           <AccordionDetails key={text}>
             <ListItem
               onClick={() => goToSubspace(text)}
@@ -58,7 +53,6 @@ const goToProfile =(mentorID) => {
               button
               key={text}
             >
->>>>>>> 898ebf872eb6b5ea50644562cf7d07441b7c2606
               <ListItemIcon>
                 <AccountCircleIcon />
               </ListItemIcon>
