@@ -44,7 +44,7 @@ const useStyles = makeStyles({
 function createComments(cd) {
   let comments = cd.map((comment) => {
     return (
-      <AccordionDetails>
+      <AccordionDetails key={JSON.stringify(comment)}>
         <Comment
           name={comment.name}
           timestamp={comment.timestamp}

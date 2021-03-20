@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
 import Post from "../components/Feed/Post";
-import { auth } from "../firebase";
+// import { auth } from "../firebase";
 import { logout, selectUser } from "../store/reducers/userSlice";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,8 +65,8 @@ function createPosts(pd) {
 
 export default function Homepage() {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const history = useHistory();
+  // const dispatch = useDispatch();
+  // const history = useHistory();
   const user = useSelector(selectUser);
   const { DateTime } = require("luxon");
 
@@ -130,8 +130,8 @@ export default function Homepage() {
 
   const [open, setOpen] = React.useState(false);
   const [posts, setPosts] = React.useState(createPosts(postsData));
-  console.log(posts);
   const [newPostContent, setNewPostContent] = React.useState("");
+
   const addPost = () => {
     if (newPostContent.trim() !== "") {
       postsData.push({

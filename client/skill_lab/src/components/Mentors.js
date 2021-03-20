@@ -6,7 +6,7 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Redirect } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,10 +20,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //Direct to group subspace page
-const goToSubspace =(subspaceName) => {
-  <Redirect to={`/subspace/`}/>
-  console.log(subspaceName)
-}
+const goToSubspace = (subspaceName) => {
+  <Redirect to={`/subspace/`} />;
+  console.log(subspaceName);
+};
 export default function Mentors({ name, list }) {
   const classes = useStyles();
 
@@ -38,9 +38,13 @@ export default function Mentors({ name, list }) {
           <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
         {list.map((text) => (
-          
-          <AccordionDetails>
-            <ListItem  onClick={() => goToSubspace(text)} value={text} button key={text}>
+          <AccordionDetails key={text}>
+            <ListItem
+              onClick={() => goToSubspace(text)}
+              value={text}
+              button
+              key={text}
+            >
               <ListItemIcon>
                 <AccountCircleIcon />
               </ListItemIcon>
