@@ -175,7 +175,7 @@ export default function Homepage() {
                 </Grid>
                 <Grid item container justify="center" spacing={3}>
                   <Grid item>
-                    <Button>Cancel</Button>
+                    <Button onClick={toggleOpen}>Cancel</Button>
                   </Grid>
                   <Grid item>
                     <Button variant="contained" color="primary" mx="auto">
