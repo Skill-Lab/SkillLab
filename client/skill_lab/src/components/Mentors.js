@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
 export default function Mentors({ name, list }) {
  const history = useHistory();
  const classes = useStyles();
@@ -45,7 +44,7 @@ const goToProfile =(mentorID) => {
         {list.map((mentor) => (
           
           <AccordionDetails key={mentor.id}>
-            <ListItem  value={mentor.name} button >
+            <ListItem key={mentor.id} value={mentor.name} button >
               <ListItemIcon>
                 <AccountCircleIcon />
               </ListItemIcon>
