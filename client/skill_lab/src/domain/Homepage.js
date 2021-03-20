@@ -64,22 +64,12 @@ function createPosts(pd) {
 }
 
 export default function Homepage() {
-  const { DateTime } = require("luxon");
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
-
-  const [open, setOpen] = React.useState(false);
-  const toggleOpen = () => setOpen(!open);
-
-  //Retrieve User
   const user = useSelector(selectUser);
-  //Check if user logged in
-  //If not logged in, redirect user to home page
-  if (!user) return <Redirect to="/" />;
+  const { DateTime } = require("luxon");
 
-  // todo: method to pull post data
-  // store posts in state
   var postsData = [
     {
       name: "Brian Tao",
@@ -138,6 +128,36 @@ export default function Homepage() {
     },
   ];
 
+  const [open, setOpen] = React.useState(false);
+  const [posts, setPosts] = React.useState(createPosts(postsData));
+  console.log(posts);
+  const [newPostContent, setNewPostContent] = React.useState("");
+  const addPost = () => {
+    if (newPostContent.trim() !== "") {
+      postsData.push({
+        name: user.displayName,
+        timestamp: DateTime.now(),
+        message: newPostContent,
+        commentsData: [],
+      });
+      setPosts(createPosts(postsData));
+      // const newPost = {
+      //   name: user.displayName,
+      //   timestamp: DateTime.now(),
+      //   message: newPostContent,
+      //   commentsData: [],
+      // };
+      // posts.push();
+      // setPosts(posts);
+    }
+    setOpen(false);
+  };
+
+  //Retrieve User
+  //Check if user logged in
+  //If not logged in, redirect user to home page
+  if (!user) return <Redirect to="/" />;
+
   // todo: method to push new post data to database?
 
   return (
@@ -146,9 +166,13 @@ export default function Homepage() {
       <CssBaseline />
       <Box mx="auto" p={2}>
         <Toolbar />
-        <>{createPosts(postsData)}</>
+        <>{posts}</>
       </Box>
-      <Fab variant="extended" className={classes.fab} onClick={toggleOpen}>
+      <Fab
+        variant="extended"
+        className={classes.fab}
+        onClick={() => setOpen(true)}
+      >
         <CreateIcon className={classes.extendedIcon} />
         New Post
       </Fab>
@@ -158,7 +182,7 @@ export default function Homepage() {
             <CardActions>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <IconButton onClick={toggleOpen}>
+                  <IconButton onClick={() => setOpen(false)}>
                     <CloseIcon />
                   </IconButton>
                 </Grid>
@@ -170,15 +194,23 @@ export default function Homepage() {
                       fullWidth
                       placeholder="What's on your mind?"
                       variant="filled"
+                      value={newPostContent}
+                      onChange={(event) =>
+                        setNewPostContent(event.target.value)
+                      }
                     ></TextField>
                   </Box>
                 </Grid>
                 <Grid item container justify="center" spacing={3}>
                   <Grid item>
-                    <Button onClick={toggleOpen}>Cancel</Button>
+                    <Button onClick={() => setOpen(false)}>Cancel</Button>
                   </Grid>
                   <Grid item>
-                    <Button variant="contained" color="primary" mx="auto">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={addPost}
+                    >
                       Post
                     </Button>
                   </Grid>
