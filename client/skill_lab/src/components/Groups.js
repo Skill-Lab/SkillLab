@@ -7,10 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { Redirect } from "react-router";
-
-//Template Component 
-
+import { Redirect, useHistory } from "react-router";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,14 +20,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//Direct to group subspace page
-const goToSubspace =(subspaceName) => {
-  <Redirect to={`/subspace/`}/>
-  console.log(subspaceName)
-}
-export default function SimpleAccordion({ name, list }) {
-  const classes = useStyles();
 
+
+export default function Groups({ name, list }) {
+  const classes = useStyles();
+  const history = useHistory();
+  
+  //Direct to group subspace page
+  const goToSubspace =(subspaceName) => {
+   history.push({
+       pathname: `/subspace/${subspaceName}`
+   })
+  }
   return (
     <div className={classes.root}>
       <Accordion>

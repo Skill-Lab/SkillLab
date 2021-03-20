@@ -1,5 +1,7 @@
 import { Divider, Drawer, makeStyles, Toolbar } from "@material-ui/core";
 import React from "react";
+import Groups from "./Groups";
+import Mentors from "./Mentors";
 import SimpleAccordion from "./SimpleAccordion";
 
 const drawerWidth = 240;
@@ -17,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 export default function LeftSidebar() {
   const classes = useStyles();
 
@@ -32,13 +36,13 @@ export default function LeftSidebar() {
         <Toolbar />
         <Divider />
         <div className={classes.drawerContainer}>
-          <SimpleAccordion
+          <Groups
             name="Groups"
             list={["Biology", "Chemistry", "Computer Science", "Geology"]}
           />
 
           <Divider />
-          <SimpleAccordion
+          <Mentors
             name="Mentors"
             list={["Bob", "John", "Susan", "Jack"]}
           />

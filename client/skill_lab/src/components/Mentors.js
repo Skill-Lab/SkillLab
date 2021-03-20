@@ -9,9 +9,6 @@ import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Redirect } from "react-router";
 
-//Template Component 
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -27,7 +24,7 @@ const goToSubspace =(subspaceName) => {
   <Redirect to={`/subspace/`}/>
   console.log(subspaceName)
 }
-export default function SimpleAccordion({ name, list }) {
+export default function Mentors({ name, list }) {
   const classes = useStyles();
 
   return (
