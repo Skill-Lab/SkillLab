@@ -77,10 +77,7 @@ export default function Post({ name, timestamp, message, commentsData }) {
   const [newCommentMessage, setNewCommentMessage] = React.useState("");
 
   const addNewComment = () => {
-    console.log("Adding new comment");
     if (newCommentMessage.trim() !== "") {
-      console.log("new comment: ", newCommentMessage);
-      console.log("current comments: ", comments);
       const newComment = {
         name: user.displayName,
         timestamp: DateTime.now().toString(),
@@ -100,10 +97,16 @@ export default function Post({ name, timestamp, message, commentsData }) {
         </AccordionDetails>,
         ...comments,
       ]);
-      console.log("after update: ", comments);
       setNewCommentMessage("");
     }
   };
+
+  function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      addNewComment();
+      event.preventDefault();
+    }
+  }
 
   return (
     <Card className={classes.root} variant="outlined">
@@ -154,6 +157,7 @@ export default function Post({ name, timestamp, message, commentsData }) {
                 size="small"
                 value={newCommentMessage}
                 onChange={(event) => setNewCommentMessage(event.target.value)}
+                onKeyPress={(event) => handleKeyPress(event)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment>

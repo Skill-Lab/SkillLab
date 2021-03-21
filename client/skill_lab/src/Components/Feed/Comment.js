@@ -82,7 +82,7 @@ export default function Comment({
                       {name} •&nbsp;
                     </Typography>
                   </Box>
-                  <Typography nowrap variant="caption" width="11rem">
+                  <Typography variant="caption">
                     {DateTime.fromISO(timestamp).toLocaleString(
                       DateTime.DATETIME_SHORT
                     )}

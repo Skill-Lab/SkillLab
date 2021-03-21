@@ -164,6 +164,13 @@ export default function Homepage() {
 
   // todo: method to push new post data to database?
 
+  function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      addNewPost();
+      event.preventDefault();
+    }
+  }
+
   return (
     <div className={classes.root}>
       <LeftSidebar />
@@ -202,6 +209,7 @@ export default function Homepage() {
                       onChange={(event) =>
                         setNewPostMessage(event.target.value)
                       }
+                      onKeyPress={(event) => handleKeyPress(event)}
                     ></TextField>
                   </Box>
                 </Grid>
