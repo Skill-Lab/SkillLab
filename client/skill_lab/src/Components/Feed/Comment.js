@@ -26,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
     border: "none",
     boxShadow: "none",
   },
+  comment_content: {
+    maxWidth: "89%",
+    wordWrap: "break-word",
+  },
 }));
 
 function getInitials(fullName) {
@@ -78,7 +82,7 @@ export default function Comment({
                       {name} •&nbsp;
                     </Typography>
                   </Box>
-                  <Typography className="timestamp" variant="caption">
+                  <Typography nowrap variant="caption" width="11rem">
                     {DateTime.fromISO(timestamp).toLocaleString(
                       DateTime.DATETIME_SHORT
                     )}
