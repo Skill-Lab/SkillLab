@@ -58,33 +58,62 @@ function createComments(cd) {
   return comments;
 }
 
+function getInitials(fullName) {
+  var splitNames = ("" + fullName).split(" ");
+  var initials = "";
+  for (const name of splitNames) {
+    initials += name.charAt(0);
+  }
+
+  return initials;
+}
+
 export default function Post({ name, timestamp, message, commentsData }) {
   const classes = useStyles();
   const user = useSelector(selectUser);
   const { DateTime } = require("luxon");
 
-  var cd = commentsData;
-  const [comments, setComments] = React.useState(createComments(cd));
-  const [newComment, setNewComment] = React.useState("");
+  const [comments, setComments] = React.useState(createComments(commentsData));
+  const [newCommentMessage, setNewCommentMessage] = React.useState("");
 
   const addNewComment = () => {
-    cd.push({
-      name: user.displayName,
-      message: newComment,
-      timestamp: DateTime.now().toString(),
-      kudosCount: 0,
-      kudosGiven: false,
-    });
-    setComments(createComments(cd));
-    setNewComment("");
+    if (newCommentMessage.trim() !== "") {
+      const newComment = {
+        name: user.displayName,
+        timestamp: DateTime.now().toString(),
+        message: newCommentMessage,
+        kudosCount: 0,
+        kudosGiven: false,
+      };
+      setComments([
+        <AccordionDetails key={JSON.stringify(newComment)}>
+          <Comment
+            name={newComment.name}
+            timestamp={newComment.timestamp}
+            message={newComment.message}
+            kudosCount={newComment.kudosCount}
+            kudosGiven={newComment.kudosGiven}
+          />
+        </AccordionDetails>,
+        ...comments,
+      ]);
+      setNewCommentMessage("");
+    }
   };
+
+  function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      addNewComment();
+      event.preventDefault();
+    }
+  }
 
   return (
     <Card className={classes.root} variant="outlined">
       <Card className={classes.content} variant="outlined">
         <CardHeader
           className={classes.header}
-          avatar={<Avatar />}
+          avatar={<Avatar>{getInitials(name)}</Avatar>}
           title={name}
           subheader={DateTime.fromISO(timestamp).toLocaleString(
             DateTime.DATETIME_MED
@@ -126,8 +155,9 @@ export default function Post({ name, timestamp, message, commentsData }) {
                 multiline
                 variant="outlined"
                 size="small"
-                value={newComment}
-                onChange={(event) => setNewComment(event.target.value)}
+                value={newCommentMessage}
+                onChange={(event) => setNewCommentMessage(event.target.value)}
+                onKeyPress={(event) => handleKeyPress(event)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment>
@@ -142,9 +172,11 @@ export default function Post({ name, timestamp, message, commentsData }) {
           </Box>
         </CardActions>
       </Card>
-      <Accordion>
+      <Accordion disabled={comments.length === 0}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={classes.heading}>Comments</Typography>
+          <Typography className={classes.heading}>
+            Comments ({comments.length})
+          </Typography>
         </AccordionSummary>
         <>{comments}</>
       </Accordion>

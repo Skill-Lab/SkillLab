@@ -26,17 +26,21 @@ const useStyles = makeStyles((theme) => ({
     border: "none",
     boxShadow: "none",
   },
+  comment_content: {
+    maxWidth: "89%",
+    wordWrap: "break-word",
+  },
 }));
 
-// function getInitials(fullName) {
-//   var splitNames = ("" + fullName).split(" ");
-//   var initials = "";
-//   for (const name of splitNames) {
-//     initials += name.charAt(0);
-//   }
+function getInitials(fullName) {
+  var splitNames = ("" + fullName).split(" ");
+  var initials = "";
+  for (const name of splitNames) {
+    initials += name.charAt(0);
+  }
 
-//   return initials;
-// }
+  return initials;
+}
 
 export default function Comment({
   name,
@@ -65,10 +69,11 @@ export default function Comment({
               <Grid item container xs={10}>
                 <Grid item>
                   <Box mr={2}>
-                    <Avatar
-                      alt={name}
-                      className={classes.avatar_small}
-                    ></Avatar>
+                    <Avatar alt={name} className={classes.avatar_small}>
+                      <Typography variant="caption">
+                        {getInitials(name)}
+                      </Typography>
+                    </Avatar>
                   </Box>
                 </Grid>
                 <Grid item className={classes.comment_content}>
@@ -77,7 +82,7 @@ export default function Comment({
                       {name} •&nbsp;
                     </Typography>
                   </Box>
-                  <Typography className="timestamp" variant="caption">
+                  <Typography variant="caption">
                     {DateTime.fromISO(timestamp).toLocaleString(
                       DateTime.DATETIME_SHORT
                     )}
