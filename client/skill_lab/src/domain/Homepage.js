@@ -130,19 +130,18 @@ export default function Homepage() {
 
   const [open, setOpen] = React.useState(false);
   const [posts, setPosts] = React.useState(createPosts(postsData));
-  const [newPostContent, setNewPostContent] = React.useState("");
+  const [newPostMessage, setNewPostMessage] = React.useState("");
 
   const addNewPost = () => {
-    if (newPostContent.trim() !== "") {
+    if (newPostMessage.trim() !== "") {
       // creating newPost is necessary for the key
       const newPost = {
         name: user.displayName,
-        timestamp: DateTime.now(),
-        message: newPostContent,
+        timestamp: DateTime.now().toString(),
+        message: newPostMessage,
         commentsData: [],
       };
       setPosts([
-        ...posts,
         <Box key={JSON.stringify(newPost)} width="100%">
           <Post
             name={newPost.name}
@@ -151,8 +150,9 @@ export default function Homepage() {
             commentsData={newPost.commentsData}
           />
         </Box>,
+        ...posts,
       ]);
-      setNewPostContent("");
+      setNewPostMessage("");
     }
     setOpen(false);
   };
@@ -198,9 +198,9 @@ export default function Homepage() {
                       fullWidth
                       placeholder="What's on your mind?"
                       variant="filled"
-                      value={newPostContent}
+                      value={newPostMessage}
                       onChange={(event) =>
-                        setNewPostContent(event.target.value)
+                        setNewPostMessage(event.target.value)
                       }
                     ></TextField>
                   </Box>

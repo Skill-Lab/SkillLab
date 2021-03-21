@@ -73,21 +73,35 @@ export default function Post({ name, timestamp, message, commentsData }) {
   const user = useSelector(selectUser);
   const { DateTime } = require("luxon");
 
-  var cd = commentsData;
-  const [comments, setComments] = React.useState(createComments(cd));
-  const [newComment, setNewComment] = React.useState("");
+  const [comments, setComments] = React.useState(createComments(commentsData));
+  const [newCommentMessage, setNewCommentMessage] = React.useState("");
 
   const addNewComment = () => {
-    if (newComment !== "") {
-      cd.push({
+    console.log("Adding new comment");
+    if (newCommentMessage.trim() !== "") {
+      console.log("new comment: ", newCommentMessage);
+      console.log("current comments: ", comments);
+      const newComment = {
         name: user.displayName,
-        message: newComment,
         timestamp: DateTime.now().toString(),
+        message: newCommentMessage,
         kudosCount: 0,
         kudosGiven: false,
-      });
-      setComments(createComments(cd));
-      setNewComment("");
+      };
+      setComments([
+        <AccordionDetails key={JSON.stringify(newComment)}>
+          <Comment
+            name={newComment.name}
+            timestamp={newComment.timestamp}
+            message={newComment.message}
+            kudosCount={newComment.kudosCount}
+            kudosGiven={newComment.kudosGiven}
+          />
+        </AccordionDetails>,
+        ...comments,
+      ]);
+      console.log("after update: ", comments);
+      setNewCommentMessage("");
     }
   };
 
@@ -138,8 +152,8 @@ export default function Post({ name, timestamp, message, commentsData }) {
                 multiline
                 variant="outlined"
                 size="small"
-                value={newComment}
-                onChange={(event) => setNewComment(event.target.value)}
+                value={newCommentMessage}
+                onChange={(event) => setNewCommentMessage(event.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment>
@@ -154,10 +168,10 @@ export default function Post({ name, timestamp, message, commentsData }) {
           </Box>
         </CardActions>
       </Card>
-      <Accordion disabled={cd.length == 0}>
+      <Accordion disabled={comments.length === 0}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}>
-            Comments ({cd.length})
+            Comments ({comments.length})
           </Typography>
         </AccordionSummary>
         <>{comments}</>
