@@ -210,6 +210,7 @@ export default function Homepage() {
                         setNewPostMessage(event.target.value)
                       }
                       onKeyPress={(event) => handleKeyPress(event)}
+                      inputRef={(input) => input && input.focus()}
                     ></TextField>
                   </Box>
                 </Grid>
