@@ -58,6 +58,16 @@ function createComments(cd) {
   return comments;
 }
 
+function getInitials(fullName) {
+  var splitNames = ("" + fullName).split(" ");
+  var initials = "";
+  for (const name of splitNames) {
+    initials += name.charAt(0);
+  }
+
+  return initials;
+}
+
 export default function Post({ name, timestamp, message, commentsData }) {
   const classes = useStyles();
   const user = useSelector(selectUser);
@@ -68,15 +78,17 @@ export default function Post({ name, timestamp, message, commentsData }) {
   const [newComment, setNewComment] = React.useState("");
 
   const addNewComment = () => {
-    cd.push({
-      name: user.displayName,
-      message: newComment,
-      timestamp: DateTime.now().toString(),
-      kudosCount: 0,
-      kudosGiven: false,
-    });
-    setComments(createComments(cd));
-    setNewComment("");
+    if (newComment !== "") {
+      cd.push({
+        name: user.displayName,
+        message: newComment,
+        timestamp: DateTime.now().toString(),
+        kudosCount: 0,
+        kudosGiven: false,
+      });
+      setComments(createComments(cd));
+      setNewComment("");
+    }
   };
 
   return (
@@ -84,7 +96,7 @@ export default function Post({ name, timestamp, message, commentsData }) {
       <Card className={classes.content} variant="outlined">
         <CardHeader
           className={classes.header}
-          avatar={<Avatar />}
+          avatar={<Avatar>{getInitials(name)}</Avatar>}
           title={name}
           subheader={DateTime.fromISO(timestamp).toLocaleString(
             DateTime.DATETIME_MED
@@ -142,9 +154,11 @@ export default function Post({ name, timestamp, message, commentsData }) {
           </Box>
         </CardActions>
       </Card>
-      <Accordion>
+      <Accordion disabled={cd.length == 0}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={classes.heading}>Comments</Typography>
+          <Typography className={classes.heading}>
+            Comments ({cd.length})
+          </Typography>
         </AccordionSummary>
         <>{comments}</>
       </Accordion>

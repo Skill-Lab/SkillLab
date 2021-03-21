@@ -132,23 +132,27 @@ export default function Homepage() {
   const [posts, setPosts] = React.useState(createPosts(postsData));
   const [newPostContent, setNewPostContent] = React.useState("");
 
-  const addPost = () => {
+  const addNewPost = () => {
     if (newPostContent.trim() !== "") {
-      postsData.push({
+      // creating newPost is necessary for the key
+      const newPost = {
         name: user.displayName,
         timestamp: DateTime.now(),
         message: newPostContent,
         commentsData: [],
-      });
-      setPosts(createPosts(postsData));
-      // const newPost = {
-      //   name: user.displayName,
-      //   timestamp: DateTime.now(),
-      //   message: newPostContent,
-      //   commentsData: [],
-      // };
-      // posts.push();
-      // setPosts(posts);
+      };
+      setPosts([
+        ...posts,
+        <Box key={JSON.stringify(newPost)} width="100%">
+          <Post
+            name={newPost.name}
+            timestamp={newPost.timestamp}
+            message={newPost.message}
+            commentsData={newPost.commentsData}
+          />
+        </Box>,
+      ]);
+      setNewPostContent("");
     }
     setOpen(false);
   };
@@ -209,7 +213,7 @@ export default function Homepage() {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={addPost}
+                      onClick={addNewPost}
                     >
                       Post
                     </Button>
