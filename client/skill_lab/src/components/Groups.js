@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -9,6 +9,9 @@ import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Redirect, useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import { selectUser } from "../store/reducers/userSlice";
+import { useSelector } from "react-redux";
+import { db } from "../firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
