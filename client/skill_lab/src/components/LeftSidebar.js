@@ -34,56 +34,29 @@ export default function LeftSidebar() {
   //Create state for data being retrieved from db
   const [groups, setGroups] = useState([]);
   const [mentors, setMentors] = useState([]);
-  const [mentorsRefs, setMentorsRefs] = useState([]);
-
+  
   //Call useEffect to run when componenet mounted for Mentors
   useEffect(() => {
     //Retrieving a specific user data from the collection called "users"
     //Using their user.uid to select specific user
-    var docRef = db.collection("users").doc(user.uid);
-    docRef.get().then((doc) => {
-      //Check if the the user exists
-      if (doc.exists) {
-          setMentorsRefs(doc.data().mentors);
-          console.log("Mentor refs " + mentorsRefs)
-          mentorsRefs.forEach((item) => {
-            console.log("Mentors start " + item)
+    var mentorList = [];
+    db.collection("mentorRelation").where("mentee_id", "==", "users/"+user.uid)
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            var mentor = {
+              id: doc.data().mentor_id,
+              name: doc.data().mentor_name
+            }
+            //setMentors([...mentors, {...mentor}])
+            mentorList.push(mentor)
+        });
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
 
-            item.get().then((doc) => {
-              if(doc.exists){
-                var mentor = {
-                  id: doc.id,
-                  name: doc.data().firstName + " " + doc.data().lastName,
-                }
-                var mentorList = mentors;
-                mentorList.push(mentor);
-                setMentors(mentorList);
-                console.log("Mentor " + mentor.name)
-
-                
-                //setMentors([...mentors, mentor ]);
-
-
-                console.log("Mentors enter if " + mentors)
-              }else{
-                console.log("Mentors enter else " + mentors)
-                setMentors([...mentors]);
-              }
-            })
-          })
-
-      } else {
-          // doc.data() will be undefined in this case if user does not exist
-          console.log("No such document!");
-          setMentors([]); 
-      }
-  }).catch((error) => {
-      console.log("Error getting document:", error);
-  });
-
-
-
-  
+    setMentors(mentorList)  
   }, []);
 
   //Call useEffect to run when componenet mounted for Groups
@@ -108,8 +81,6 @@ export default function LeftSidebar() {
   });
   
   }, []);
-
-  
 
   return (
     <div>
