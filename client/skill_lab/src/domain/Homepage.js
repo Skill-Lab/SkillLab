@@ -130,25 +130,29 @@ export default function Homepage() {
 
   const [open, setOpen] = React.useState(false);
   const [posts, setPosts] = React.useState(createPosts(postsData));
-  const [newPostContent, setNewPostContent] = React.useState("");
+  const [newPostMessage, setNewPostMessage] = React.useState("");
 
-  const addPost = () => {
-    if (newPostContent.trim() !== "") {
-      postsData.push({
+  const addNewPost = () => {
+    if (newPostMessage.trim() !== "") {
+      // creating newPost is necessary for the key
+      const newPost = {
         name: user.displayName,
-        timestamp: DateTime.now(),
-        message: newPostContent,
+        timestamp: DateTime.now().toString(),
+        message: newPostMessage,
         commentsData: [],
-      });
-      setPosts(createPosts(postsData));
-      // const newPost = {
-      //   name: user.displayName,
-      //   timestamp: DateTime.now(),
-      //   message: newPostContent,
-      //   commentsData: [],
-      // };
-      // posts.push();
-      // setPosts(posts);
+      };
+      setPosts([
+        <Box key={JSON.stringify(newPost)} width="100%">
+          <Post
+            name={newPost.name}
+            timestamp={newPost.timestamp}
+            message={newPost.message}
+            commentsData={newPost.commentsData}
+          />
+        </Box>,
+        ...posts,
+      ]);
+      setNewPostMessage("");
     }
     setOpen(false);
   };
@@ -159,6 +163,13 @@ export default function Homepage() {
   if (!user) return <Redirect to="/" />;
 
   // todo: method to push new post data to database?
+
+  function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      addNewPost();
+      event.preventDefault();
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -194,10 +205,12 @@ export default function Homepage() {
                       fullWidth
                       placeholder="What's on your mind?"
                       variant="filled"
-                      value={newPostContent}
+                      value={newPostMessage}
                       onChange={(event) =>
-                        setNewPostContent(event.target.value)
+                        setNewPostMessage(event.target.value)
                       }
+                      onKeyPress={(event) => handleKeyPress(event)}
+                      inputRef={(input) => input && input.focus()}
                     ></TextField>
                   </Box>
                 </Grid>
@@ -209,7 +222,7 @@ export default function Homepage() {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={addPost}
+                      onClick={addNewPost}
                     >
                       Post
                     </Button>
