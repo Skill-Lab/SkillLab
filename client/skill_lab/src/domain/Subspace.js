@@ -58,6 +58,7 @@ function createPosts(pd) {
           timestamp={post.timestamp}
           message={post.message}
           commentsData={post.commentsData}
+          post_id={"posts/"+post.post_id}
         />
       </Box>
     );
@@ -106,7 +107,7 @@ export default function Subspace() {
                 timestamp={newPost.timestamp}
                 message={newPost.message}
                 commentsData={newPost.commentsData}
-                post_id={"post/"+newPost.post_id}
+                post_id={"posts/"+newPost.post_id}
               />
             </Box>,
             ...posts,
@@ -152,11 +153,12 @@ export default function Subspace() {
                   name: doc.data().name,
                   timestamp: doc.data().timestamp,
                   message: doc.data().message,
+                  post_id: doc.id,
                   commentsData: [],
                 };
 
                 db.collection("comments")
-                  .where("post_id", "==", "post/" + doc.id)
+                  .where("post_id", "==", "posts/" + doc.id)
                   .get()
                   .then((querySnapshot) => {
                     querySnapshot.forEach((doc1) => {
@@ -164,7 +166,10 @@ export default function Subspace() {
                         name: doc1.data().name,
                         timestamp: doc1.data().timestamp,
                         message: doc1.data().message,
-                        commentsData: [],
+                        post_id: doc1.data().post_id,
+                        kudosCount: doc1.data().kudosCount,
+                        kudosGiven: doc1.data().kudosGiven, 
+                        comment_id: "comments/"+doc1.id
                       };
                       newPost.commentsData.push(newComment);
                       console.log("Reading doc ID ", doc1.data().message);
