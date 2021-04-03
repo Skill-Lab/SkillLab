@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import { makeStyles } from "@material-ui/core/styles";
+import { db } from "../../firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,6 +49,7 @@ export default function Comment({
   message,
   kudosCount,
   kudosGiven,
+  comment_id,
 }) {
   const classes = useStyles();
   var { DateTime } = require("luxon");
@@ -58,6 +60,25 @@ export default function Comment({
   const setKudos = () => {
     setKudosCount(kg ? kc - 1 : kc + 1);
     setKudosGiven(!kg);
+
+    //Find Comment
+    //Update
+    console.log("Updating commentID: ", comment_id);
+    var commentRef = db.doc(comment_id);
+    var temp_kc = kc
+    var temp_kg = kg
+    return commentRef
+      .update({
+        kudosCount: kg ? kc - 1 : kc + 1,
+        kudosGiven: !kg,
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch((error) => {
+        // The document probably doesn't exist.
+        console.error("Error updating document: ", error);
+      });
   };
 
   return (
