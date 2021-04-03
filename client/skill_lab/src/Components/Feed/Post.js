@@ -52,6 +52,7 @@ function createComments(cd) {
           message={comment.message}
           kudosCount={comment.kudosCount}
           kudosGiven={comment.kudosGiven}
+          comment_id={comment.comment_id}
         />
       </AccordionDetails>
     );
@@ -93,23 +94,26 @@ export default function Post({ name, timestamp, message, commentsData, post_id }
         .add(newComment)
         .then((docRef) => {
           console.log("Added comment: Document written with ID: ", docRef.id);
+          newComment.comment_id = docRef.id
+        })
+        .then(()=>{
+          setComments([
+            <AccordionDetails key={JSON.stringify(newComment)}>
+              <Comment
+                name={newComment.name}
+                timestamp={newComment.timestamp}
+                message={newComment.message}
+                kudosCount={newComment.kudosCount}
+                kudosGiven={newComment.kudosGiven}
+                comment_id={newComment.comment_id}
+              />
+            </AccordionDetails>,
+            ...comments,
+          ]);
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
         });
-
-      setComments([
-        <AccordionDetails key={JSON.stringify(newComment)}>
-          <Comment
-            name={newComment.name}
-            timestamp={newComment.timestamp}
-            message={newComment.message}
-            kudosCount={newComment.kudosCount}
-            kudosGiven={newComment.kudosGiven}
-          />
-        </AccordionDetails>,
-        ...comments,
-      ]);
       setNewCommentMessage("");
     }
   };
