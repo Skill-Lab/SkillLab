@@ -27,6 +27,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../store/reducers/userSlice";
 
 import Comment from "./Comment";
+import { db } from "../../firebase";
 
 const useStyles = makeStyles({
   root: {
@@ -68,7 +69,7 @@ function getInitials(fullName) {
   return initials;
 }
 
-export default function Post({ name, timestamp, message, commentsData }) {
+export default function Post({ name, timestamp, message, commentsData, post_id }) {
   const classes = useStyles();
   const user = useSelector(selectUser);
   const { DateTime } = require("luxon");
@@ -84,7 +85,19 @@ export default function Post({ name, timestamp, message, commentsData }) {
         message: newCommentMessage,
         kudosCount: 0,
         kudosGiven: false,
+        post_id: post_id
       };
+
+      // Add a new comment to DB with a generated id.
+      db.collection("comments")
+        .add(newComment)
+        .then((docRef) => {
+          console.log("Added comment: Document written with ID: ", docRef.id);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+
       setComments([
         <AccordionDetails key={JSON.stringify(newComment)}>
           <Comment
