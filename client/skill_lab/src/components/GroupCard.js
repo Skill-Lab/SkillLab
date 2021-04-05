@@ -27,7 +27,7 @@ export default function GroupCard({
   isJoined,
   imageURL,
 }) {
-  const [joinGroup, setJoinGroup] = useState(false);
+  const [joinGroup, setJoinGroup] = useState(isJoined);
 
   //Retrieve user from redux
   const user = useSelector(selectUser);
@@ -69,7 +69,7 @@ export default function GroupCard({
       <CardActions>
 
         {/* Check if user has alread joined or not  */}
-        {!isJoined ? (
+        {!joinGroup ? (
           <Button onClick={() => addGroup(id)} size="small" color="primary">
             Join
           </Button>
@@ -79,7 +79,7 @@ export default function GroupCard({
           </Button>
         )}
 
-        {!isJoined ? (
+        {!joinGroup ? (
           <Button size="small" color="primary">
             Learn More
           </Button>
