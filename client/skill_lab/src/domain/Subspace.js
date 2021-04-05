@@ -18,11 +18,11 @@ import CreateIcon from "@material-ui/icons/Create";
 import CloseIcon from "@material-ui/icons/Close";
 import { deepOrange } from "@material-ui/core/colors";
 
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
-import { auth, db } from "../firebase";
-import { logout, selectUser } from "../store/reducers/userSlice";
+import { db } from "../firebase";
+import { selectUser } from "../store/reducers/userSlice";
 import Post from "../components/Feed/Post";
 import { DateTime } from "luxon";
 
@@ -58,7 +58,7 @@ function createPosts(pd) {
           timestamp={post.timestamp}
           message={post.message}
           commentsData={post.commentsData}
-          post_id={"posts/"+post.post_id}
+          post_id={"posts/" + post.post_id}
         />
       </Box>
     );
@@ -96,9 +96,9 @@ export default function Subspace() {
         .add(newPost)
         .then((docRef) => {
           console.log("Added post: Document written with ID: ", docRef.id);
-          newPost.post_id = docRef.id
+          newPost.post_id = docRef.id;
         })
-        .then(()=>{
+        .then(() => {
           console.log("New post id: ", newPost.post_id);
           setPosts([
             <Box key={JSON.stringify(newPost)} width="100%">
@@ -107,7 +107,7 @@ export default function Subspace() {
                 timestamp={newPost.timestamp}
                 message={newPost.message}
                 commentsData={newPost.commentsData}
-                post_id={"posts/"+newPost.post_id}
+                post_id={"posts/" + newPost.post_id}
               />
             </Box>,
             ...posts,
@@ -117,8 +117,6 @@ export default function Subspace() {
           console.error("Error adding document: ", error);
         });
 
-
-      
       setNewPostMessage("");
     }
     setOpen(false);
@@ -168,8 +166,8 @@ export default function Subspace() {
                         message: doc1.data().message,
                         post_id: doc1.data().post_id,
                         kudosCount: doc1.data().kudosCount,
-                        kudosGiven: doc1.data().kudosGiven, 
-                        comment_id: "comments/"+doc1.id
+                        kudosGiven: doc1.data().kudosGiven,
+                        comment_id: "comments/" + doc1.id,
                       };
                       newPost.commentsData.push(newComment);
                       console.log("Reading doc ID ", doc1.data().message);
