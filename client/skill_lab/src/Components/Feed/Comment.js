@@ -65,8 +65,7 @@ export default function Comment({
     //Update
     console.log("Updating commentID: ", comment_id);
     var commentRef = db.doc(comment_id);
-    var temp_kc = kc
-    var temp_kg = kg
+
     return commentRef
       .update({
         kudosCount: kg ? kc - 1 : kc + 1,

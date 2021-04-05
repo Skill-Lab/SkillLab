@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import LeftSidebar from "../components/LeftSidebar";
 import GroupCard from "../components/GroupCard";
@@ -139,9 +139,7 @@ function createGroups(groupsData) {
 
 export default function InterestPage() {
   const classes = useStyles();
-  const [formats, setFormats] = React.useState(() => []);
   const [groups, setGroups] = React.useState();
-  const [userGroups, setUserGroups] = React.useState([]);
 
   //Retrieve user from redux
   const user = useSelector(selectUser);

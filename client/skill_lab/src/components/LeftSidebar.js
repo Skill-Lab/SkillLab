@@ -5,7 +5,6 @@ import { db } from "../firebase";
 import { selectUser } from "../store/reducers/userSlice";
 import Groups from "./Groups";
 import Mentors from "./Mentors";
-import SimpleAccordion from "./SimpleAccordion";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -30,11 +29,11 @@ async function getUserSubspaces(user) {
     .get()
     .then((querySnapshot) => {
       querySnapshot.docs.forEach((doc) => {
-        var subspace = {
-          id: doc.data().subspace_id,
-          name: doc.data().name,
-          imageURL: doc.data().imageURL,
-        };
+        // var subspace = {
+        //   id: doc.data().subspace_id,
+        //   name: doc.data().name,
+        //   imageURL: doc.data().imageURL,
+        // };
         console.log("Subspace name: " + doc.data().subspace_name);
         userSubspaces.push(doc.data().subspace_name);
       });
@@ -76,7 +75,7 @@ export default function LeftSidebar() {
       });
 
     setMentors(mentorList);
-  }, []);
+  }, [user.uid]);
 
   //Call useEffect to run when componenet mounted for Groups
   useEffect(() => {
@@ -84,7 +83,7 @@ export default function LeftSidebar() {
       console.log("Data from LS " + data[0])
       setGroups(data);
     });
-  }, []);
+  }, [user]);
 
   return (
     <div>
