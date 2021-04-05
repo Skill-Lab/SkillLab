@@ -33,22 +33,40 @@ export default function GroupCard({
   const user = useSelector(selectUser);
   const classes = useStyles();
 
-  //Add group to db  
+  //Add group to db
   function addGroup(id) {
     //groupData.name.isJoined = tr
     var entry = {
       subspace_id: id,
       subspace_name: name,
       user_id: user.uid,
-      imageURL: imageURL
+      imageURL: imageURL,
     };
     db.collection("userSubspace")
       .add(entry)
       .then((docRef) => {
         console.log("Added Group to list" + docRef.id);
+        setJoinGroup(true);
       });
-    setJoinGroup(true);
   }
+
+  //Delete group from db
+  async function leaveGroup(id) {
+    await db
+      .collection("userSubspace")
+      .where("user_id", "==", user.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          if (doc.data().subspace_id === id) {
+            doc.ref.delete();
+            console.log("Successfully deleted group");
+            setJoinGroup(false);
+          }
+        });
+      });
+  }
+
   return (
     <Card className={classes.root}>
       <CardActionArea>
@@ -67,7 +85,6 @@ export default function GroupCard({
         </CardContent>
       </CardActionArea>
       <CardActions>
-
         {/* Check if user has alread joined or not  */}
         {!joinGroup ? (
           <Button onClick={() => addGroup(id)} size="small" color="primary">
@@ -84,7 +101,7 @@ export default function GroupCard({
             Learn More
           </Button>
         ) : (
-          <Button size="small" color="secondary">
+          <Button onClick={() => leaveGroup(id)} size="small" color="secondary">
             Leave
           </Button>
         )}
