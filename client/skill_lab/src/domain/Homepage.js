@@ -17,12 +17,12 @@ import CloseIcon from "@material-ui/icons/Close";
 import { deepOrange } from "@material-ui/core/colors";
 
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
 import Post from "../components/Feed/Post";
 // import { auth } from "../firebase";
-import { logout, selectUser } from "../store/reducers/userSlice";
+import { selectUser } from "../store/reducers/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
