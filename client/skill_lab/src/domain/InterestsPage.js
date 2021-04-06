@@ -1,25 +1,76 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import LeftSidebar from "../components/LeftSidebar";
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import Button from "@material-ui/core/Button";
+import GroupCard from "../components/GroupCard";
+import { db } from "../firebase";
+import { useSelector } from "react-redux";
+import { selectUser } from "../store/reducers/userSlice";
+
+const groupsData = [
+  {
+    id: "computer science",
+    name: "Computer Science",
+    description: "This is a computer science subspace",
+    isJoined: false,
+    imageURL:
+      "https://www.mercy.edu/sites/default/files/2020-07/iStock-1182604339.jpg",
+  },
+  {
+    id: "biology",
+    name: "Biology",
+    description: "This is a biology subspace",
+    isJoined: true,
+    imageURL:
+      "https://watchandlearn.scholastic.com/content/dam/classroom-magazines/watchandlearn/videos/animals-and-plants/plants/what-are-plants-/What-Are-Plants.jpg",
+  },
+  {
+    id: "enterpreneurship",
+    name: "Enterpreneurship",
+    description: "This is a enterpreneurship subspace",
+    isJoined: false,
+    imageURL:
+      "https://i0.wp.com/www.iedunote.com/img/245/entrepreneurship-what-is-the-modern-definition-of-entrepreneur.jpg?fit=2190%2C1689&quality=100&ssl=1",
+  },
+
+  {
+    id: "ai",
+    name: "AI",
+    description: "This is an AI subspace",
+    isJoined: false,
+    imageURL:
+      "https://images.idgesg.net/images/article/2018/10/ai_artificial-intelligence_circuit-board_circuitry_mother-board_nodes_computer-chips-100777423-large.jpg",
+  },
+  {
+    id: "chemistry",
+    name: "Chemistry",
+    description: "This is a chemistry subspace",
+    isJoined: false,
+    imageURL:
+      "https://jobs.newscientist.com/getasset/c40a5488-11be-43b0-843f-a2e6ef9f0612/",
+  },
+  {
+    id: "math",
+    name: "Math",
+    description: "This is a math subspace",
+    isJoined: false,
+    imageURL: "https://miro.medium.com/max/6000/1*L76A5gL6176UbMgn7q4Ybg.jpeg",
+  },
+];
 
 const useStyles = makeStyles((theme) => ({
-
   title: {
     padding: theme.spacing(10),
-    paddingLeft:theme.spacing(90),
+    paddingLeft: theme.spacing(90),
     fontWeight: "bold",
     color: "#ffa366",
     fontFamily: "Verdana ",
-    fontSize: 20,  
+    fontSize: 20,
   },
 
   content: {
-    margin: 'auto',
-    paddingLeft:theme.spacing(60),
-},
+    margin: "auto",
+    paddingLeft: theme.spacing(60),
+  },
 
   buttonColor: {
     "&.Mui-selected": {
@@ -31,113 +82,83 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export async function getUserSubspacesList(user) {
+  const userSubspaces = [];
+
+  await db
+    .collection("userSubspace")
+    .where("user_id", "==", user.uid)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.docs.forEach((doc) => {
+        userSubspaces.push(doc.data().subspace_id);
+      });
+    });
+  return userSubspaces;
+}
+
+async function getSubspaces(userSubspaces) {
+  console.log("Groups data: " + userSubspaces);
+
+  const subspaces = [];
+
+  await db
+    .collection("subspace")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.docs.forEach((doc) => {
+        var subspace = {
+          id: doc.id,
+          name: doc.data().name,
+          description: doc.data().description,
+          imageURL: doc.data().imageURL,
+          isJoined: userSubspaces.includes(doc.id),
+        };
+        subspaces.push(subspace);
+      });
+    });
+  return subspaces;
+}
+
+function createGroups(groupsData) {
+  let groups = groupsData.map((group) => {
+    return (
+      <Grid key={JSON.stringify(group)} item xs={3}>
+        <GroupCard
+          id={group.id}
+          name={group.name}
+          description={group.description}
+          isJoined={group.isJoined}
+          imageURL={group.imageURL}
+        />
+      </Grid>
+    );
+  });
+  return groups;
+}
+
 export default function InterestPage() {
   const classes = useStyles();
-  const [formats, setFormats] = React.useState(() => []);
+  const [groups, setGroups] = React.useState();
 
-  const handleFormat = (event, newFormats) => {
-    if (newFormats.length) {
-      setFormats(newFormats);
-    }
-  };
+  //Retrieve user from redux
+  const user = useSelector(selectUser);
 
+  useEffect(() => {
+    getUserSubspacesList(user).then((data) => {
+      getSubspaces(data).then((data) => {
+        setGroups(createGroups(data));
+      });
+    });
+  }, [user]);
   return (
     <div className={classes.root}>
       <LeftSidebar />
-
-      <div  className={classes.title}> Select at least 3 interests</div>
-
+      <div className={classes.title}> Select at least 3 interests</div>
       <div className={classes.content}>
-        <Grid container spacing={8}>
-          <Grid item xs={12}>
-            <ToggleButtonGroup
-              className={classes.toggleButton}
-              value={formats}
-              onChange={handleFormat}
-            >
-              <ToggleButton value="physics" className={classes.buttonColor}>
-                Physics
-              </ToggleButton>
-              <ToggleButton value="chemistry" className={classes.buttonColor}>
-                Chemistry
-              </ToggleButton>
-              <ToggleButton value="biology" className={classes.buttonColor}>
-                Biology
-              </ToggleButton>
-              <ToggleButton value="computer" className={classes.buttonColor}>
-                Computer Science
-              </ToggleButton>
-              <ToggleButton value="psychology" className={classes.buttonColor}>
-                Psychology
-              </ToggleButton>
-              <ToggleButton value="geology" className={classes.buttonColor}>
-                Geology
-              </ToggleButton>
-              <ToggleButton value="geography" className={classes.buttonColor}>
-                Geography
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Grid>
-
-          <Grid item xs={12}>
-            <div className={classes.toggleContainer}>
-              <ToggleButtonGroup value={formats} onChange={handleFormat}>
-                <ToggleButton value="resume" className={classes.buttonColor}>
-                  Resume
-                </ToggleButton>
-                <ToggleButton
-                  value="interviews"
-                  className={classes.buttonColor}
-                >
-                  Interviews
-                </ToggleButton>
-                <ToggleButton value="studying" className={classes.buttonColor}>
-                  Studying
-                </ToggleButton>
-                <ToggleButton
-                  value="networking"
-                  className={classes.buttonColor}
-                >
-                  Networking
-                </ToggleButton>
-                <ToggleButton value="time" className={classes.buttonColor}>
-                  Time Management
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </div>
-          </Grid>
-
-          <Grid item xs={12}>
-            <div className={classes.toggleContainer}>
-              <ToggleButtonGroup value={formats} onChange={handleFormat}>
-                <ToggleButton value="ai" className={classes.buttonColor}>
-                  Artificial Intelligence
-                </ToggleButton>
-                <ToggleButton value="ml" className={classes.buttonColor}>
-                  Machine Learning
-                </ToggleButton>
-                <ToggleButton value="web" className={classes.buttonColor}>
-                  Web Development
-                </ToggleButton>
-                <ToggleButton value="mobile" className={classes.buttonColor}>
-                  Mobile Development
-                </ToggleButton>
-                <ToggleButton value="hardware" className={classes.buttonColor}>
-                  Hardware
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </div>
-          </Grid>
+        <Grid container spacing={1}>
+          {groups}
         </Grid>
-
-        <Button
-            type="submit"
-            variant="contained"
-            className={classes.submit}
-            //onClick={}
-          >
-            Submit
-          </Button>
       </div>
     </div>
   );
