@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   CardActions,
+  CircularProgress,
   CssBaseline,
   Fab,
   Grid,
@@ -75,6 +76,8 @@ export default function Subspace() {
   const [description, setDescription] = useState();
   const [members, setMembers] = useState();
 
+  const [loading, setLoading] = useState(true);
+
   const [open, setOpen] = React.useState(false);
   const [posts, setPosts] = React.useState([]);
   const [newPostMessage, setNewPostMessage] = React.useState("");
@@ -127,6 +130,7 @@ export default function Subspace() {
 
   //Make retrieve data from db
   useEffect(() => {
+    setLoading(true);
     var docRef = db.collection("subspace").doc(subspaceName.toLowerCase());
     docRef
       .get()
@@ -181,16 +185,20 @@ export default function Subspace() {
               });
               console.log("Reading doc ID ", doc.id);
               setPosts(createPosts(postsData));
+              setLoading(false);
             })
             .catch((error) => {
               console.log("Error getting documents: ", error);
+              setLoading(false);
             });
+
           console.log(postsData);
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
           setPosts(createPosts([]));
           setDescription("");
+          setLoading(false);
         }
       })
       .catch((error) => {
@@ -219,7 +227,7 @@ export default function Subspace() {
       <Box mx="auto" p={2}>
         <Toolbar />
         <h1>{subspaceName}</h1>
-        <>{posts}</>
+        {loading ? <CircularProgress /> : <>{posts}</>}
       </Box>
       <Fab
         variant="extended"
