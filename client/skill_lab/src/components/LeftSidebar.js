@@ -75,7 +75,7 @@ export default function LeftSidebar() {
       });
 
     setMentors(mentorList);
-  }, [user.uid]);
+  }, [user]);
 
   //Call useEffect to run when componenet mounted for Groups
   useEffect(() => {
