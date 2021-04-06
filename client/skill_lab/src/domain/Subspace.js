@@ -58,6 +58,7 @@ function createPosts(pd) {
           timestamp={post.timestamp}
           message={post.message}
           commentsData={post.commentsData}
+          post_id={"posts/"+post.post_id}
         />
       </Box>
     );
@@ -70,7 +71,6 @@ export default function Subspace() {
   var { subspaceName } = useParams();
 
   var postsData = [];
-
 
   const [description, setDescription] = useState();
   const [members, setMembers] = useState();
@@ -86,37 +86,39 @@ export default function Subspace() {
         name: user.displayName,
         timestamp: DateTime.now().toString(),
         message: newPostMessage,
+        kudos: 1,
+        subspace_id: "subspace/" + subspaceName.toLowerCase(),
         commentsData: [],
       };
 
-      // Add a new document with a generated id.
+      // Add a new post to DB with a generated id.
       db.collection("posts")
-        .add({
-          name: user.displayName,
-          timestamp: DateTime.now().toString(),
-          message: newPostMessage,
-          kudos: 1,
-          subspace_id: "subspace/" + subspaceName.toLowerCase(),
-          commentsData: [],
-        })
+        .add(newPost)
         .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
+          console.log("Added post: Document written with ID: ", docRef.id);
+          newPost.post_id = docRef.id
+        })
+        .then(()=>{
+          console.log("New post id: ", newPost.post_id);
+          setPosts([
+            <Box key={JSON.stringify(newPost)} width="100%">
+              <Post
+                name={newPost.name}
+                timestamp={newPost.timestamp}
+                message={newPost.message}
+                commentsData={newPost.commentsData}
+                post_id={"posts/"+newPost.post_id}
+              />
+            </Box>,
+            ...posts,
+          ]);
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
         });
 
-      setPosts([
-        <Box key={JSON.stringify(newPost)} width="100%">
-          <Post
-            name={newPost.name}
-            timestamp={newPost.timestamp}
-            message={newPost.message}
-            commentsData={newPost.commentsData}
-          />
-        </Box>,
-        ...posts,
-      ]);
+
+      
       setNewPostMessage("");
     }
     setOpen(false);
@@ -139,7 +141,11 @@ export default function Subspace() {
           setPosts(doc.data().posts);
 
           db.collection("posts")
-            .where("subspace_id", "==", "subspace/" + subspaceName.toLowerCase())
+            .where(
+              "subspace_id",
+              "==",
+              "subspace/" + subspaceName.toLowerCase()
+            )
             .get()
             .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
@@ -147,21 +153,45 @@ export default function Subspace() {
                   name: doc.data().name,
                   timestamp: doc.data().timestamp,
                   message: doc.data().message,
+                  post_id: doc.id,
                   commentsData: [],
                 };
-                postsData.push(newPost)
-                
+
+                db.collection("comments")
+                  .where("post_id", "==", "posts/" + doc.id)
+                  .get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((doc1) => {
+                      var newComment = {
+                        name: doc1.data().name,
+                        timestamp: doc1.data().timestamp,
+                        message: doc1.data().message,
+                        post_id: doc1.data().post_id,
+                        kudosCount: doc1.data().kudosCount,
+                        kudosGiven: doc1.data().kudosGiven, 
+                        comment_id: "comments/"+doc1.id
+                      };
+                      newPost.commentsData.push(newComment);
+                      console.log("Reading doc ID ", doc1.data().message);
+                    });
+                    setPosts(createPosts(postsData));
+                  })
+                  .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                  });
+                postsData.push(newPost);
               });
-              setPosts(createPosts(postsData))
+              console.log("Reading doc ID ", doc.id);
+              setPosts(createPosts(postsData));
             })
             .catch((error) => {
               console.log("Error getting documents: ", error);
             });
-           console.log(postsData)
+          console.log(postsData);
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
-          setPosts(createPosts([]))
+          setPosts(createPosts([]));
           setDescription("");
         }
       })

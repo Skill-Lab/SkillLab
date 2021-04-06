@@ -27,6 +27,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../store/reducers/userSlice";
 
 import Comment from "./Comment";
+import { db } from "../../firebase";
 
 const useStyles = makeStyles({
   root: {
@@ -51,6 +52,7 @@ function createComments(cd) {
           message={comment.message}
           kudosCount={comment.kudosCount}
           kudosGiven={comment.kudosGiven}
+          comment_id={comment.comment_id}
         />
       </AccordionDetails>
     );
@@ -68,7 +70,7 @@ function getInitials(fullName) {
   return initials;
 }
 
-export default function Post({ name, timestamp, message, commentsData }) {
+export default function Post({ name, timestamp, message, commentsData, post_id }) {
   const classes = useStyles();
   const user = useSelector(selectUser);
   const { DateTime } = require("luxon");
@@ -84,19 +86,34 @@ export default function Post({ name, timestamp, message, commentsData }) {
         message: newCommentMessage,
         kudosCount: 0,
         kudosGiven: false,
+        post_id: post_id
       };
-      setComments([
-        <AccordionDetails key={JSON.stringify(newComment)}>
-          <Comment
-            name={newComment.name}
-            timestamp={newComment.timestamp}
-            message={newComment.message}
-            kudosCount={newComment.kudosCount}
-            kudosGiven={newComment.kudosGiven}
-          />
-        </AccordionDetails>,
-        ...comments,
-      ]);
+
+      // Add a new comment to DB with a generated id.
+      db.collection("comments")
+        .add(newComment)
+        .then((docRef) => {
+          console.log("Added comment: Document written with ID: ", docRef.id);
+          newComment.comment_id = docRef.id
+        })
+        .then(()=>{
+          setComments([
+            <AccordionDetails key={JSON.stringify(newComment)}>
+              <Comment
+                name={newComment.name}
+                timestamp={newComment.timestamp}
+                message={newComment.message}
+                kudosCount={newComment.kudosCount}
+                kudosGiven={newComment.kudosGiven}
+                comment_id={newComment.comment_id}
+              />
+            </AccordionDetails>,
+            ...comments,
+          ]);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
       setNewCommentMessage("");
     }
   };
