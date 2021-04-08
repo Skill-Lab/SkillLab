@@ -73,15 +73,6 @@ export default function Navbar() {
             <div className={classes.rightButtons}>
               <Button href="/login">Login</Button>
               <Button href="/signup">Signup</Button>
-
-              <IconButton
-                href="/userProfile"
-                //onClick={handleMenu}
-                color="#ff5c5c"
-              >
-                <AccountCircle />
-                </IconButton>
-
             </div>
           ) : (
             //User is logged in
@@ -91,6 +82,13 @@ export default function Navbar() {
               <Button  onClick={signout}>
                 Logout
               </Button>
+              <IconButton
+                href="/userProfile"
+                //onClick={handleMenu}
+                color="#ff5c5c"
+              >
+                <AccountCircle />
+                </IconButton>
             </div>
           )}
         </Toolbar>
