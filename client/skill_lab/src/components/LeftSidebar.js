@@ -1,8 +1,12 @@
 import { Divider, Drawer, makeStyles, Toolbar } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { db } from "../firebase";
-import { selectUser } from "../store/reducers/userSlice";
+import {
+  addGroups,
+  selectGroups,
+  selectUser,
+} from "../store/reducers/userSlice";
 import Groups from "./Groups";
 import Mentors from "./Mentors";
 const drawerWidth = 240;
@@ -29,16 +33,16 @@ async function getUserSubspaces(user) {
     .get()
     .then((querySnapshot) => {
       querySnapshot.docs.forEach((doc) => {
-        // var subspace = {
-        //   id: doc.data().subspace_id,
-        //   name: doc.data().name,
-        //   imageURL: doc.data().imageURL,
-        // };
+        var subspace = {
+          id: doc.data().subspace_id,
+          name: doc.data().subspace_name,
+          imageURL: doc.data().imageURL,
+        };
         console.log("Subspace name: " + doc.data().subspace_name);
-        userSubspaces.push(doc.data().subspace_name);
+        userSubspaces.push(subspace);
       });
     });
-    console.log("User subspaces list: " + userSubspaces);
+  console.log("User subspaces list: " + userSubspaces);
   return userSubspaces;
 }
 
@@ -47,6 +51,9 @@ export default function LeftSidebar() {
 
   //Retrieve user from redux
   const user = useSelector(selectUser);
+  const subspaces = useSelector(selectGroups);
+  console.log("Subspaces from REDUX: " + subspaces.groups);
+  const dispatch = useDispatch();
 
   //Create state for data being retrieved from db
   const [groups, setGroups] = useState([]);
@@ -80,8 +87,13 @@ export default function LeftSidebar() {
   //Call useEffect to run when componenet mounted for Groups
   useEffect(() => {
     getUserSubspaces(user).then((data) => {
-      console.log("Data from LS " + data[0])
+      console.log("Data from LS " + data[0]);
       setGroups(data);
+      dispatch(
+        addGroups({
+          groups: data,
+        })
+      );
     });
   }, [user]);
 
@@ -97,7 +109,7 @@ export default function LeftSidebar() {
         <Toolbar />
         <Divider />
         <div className={classes.drawerContainer}>
-          <Groups name="Groups" list={groups} />
+          <Groups name="Groups" />
 
           <Divider />
           <Mentors name="Mentors" list={mentors} />
