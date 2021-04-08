@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -13,8 +13,6 @@ import {
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
-import { selectGroups } from "../store/reducers/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,12 +24,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Groups({ name }) {
+export default function Groups({ name, list }) {
   const classes = useStyles();
   const history = useHistory();
 
-  const subspaces = useSelector(selectGroups);
-  const [groups, setGroups] = useState(subspaces.groups);
   //Direct to group subspace page
   const goToSubspace = (subspaceName) => {
     history.push({
@@ -48,18 +44,18 @@ export default function Groups({ name }) {
         >
           <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
-        {groups.map((text) => (
-          <AccordionDetails key={text.id}>
+        {list.map((text) => (
+          <AccordionDetails key={text}>
             <ListItem
-              onClick={() => goToSubspace(text.name)}
-              value={text.name}
+              onClick={() => goToSubspace(text)}
+              value={text}
               button
-              key={text.id}
+              key={text}
             >
               <ListItemIcon>
-                <Avatar src={text.imageURL} />
+                <Avatar  />
               </ListItemIcon>
-              <ListItemText primary={text.name} />
+              <ListItemText primary={text} />
             </ListItem>
           </AccordionDetails>
         ))}
