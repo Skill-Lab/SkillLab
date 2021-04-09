@@ -5,8 +5,6 @@ import { db } from "../firebase";
 import { selectUser } from "../store/reducers/userSlice";
 import Groups from "./Groups";
 import Mentors from "./Mentors";
-import SimpleAccordion from "./SimpleAccordion";
-
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -22,11 +20,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+async function getUserSubspaces(user) {
+  const userSubspaces = [];
 
+  await db
+    .collection("userSubspace")
+    .where("user_id", "==", user.uid)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.docs.forEach((doc) => {
+        // var subspace = {
+        //   id: doc.data().subspace_id,
+        //   name: doc.data().name,
+        //   imageURL: doc.data().imageURL,
+        // };
+        console.log("Subspace name: " + doc.data().subspace_name);
+        userSubspaces.push(doc.data().subspace_name);
+      });
+    });
+    console.log("User subspaces list: " + userSubspaces);
+  return userSubspaces;
+}
 
 export default function LeftSidebar() {
   const classes = useStyles();
-
 
   //Retrieve user from redux
   const user = useSelector(selectUser);
@@ -34,53 +51,39 @@ export default function LeftSidebar() {
   //Create state for data being retrieved from db
   const [groups, setGroups] = useState([]);
   const [mentors, setMentors] = useState([]);
-  
+
   //Call useEffect to run when componenet mounted for Mentors
   useEffect(() => {
     //Retrieving a specific user data from the collection called "users"
     //Using their user.uid to select specific user
     var mentorList = [];
-    db.collection("mentorRelation").where("mentee_id", "==", "users/"+user.uid)
-    .get()
-    .then((querySnapshot) => {
+    db.collection("mentorRelation")
+      .where("mentee_id", "==", "users/" + user.uid)
+      .get()
+      .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            var mentor = {
-              id: doc.data().mentor_id,
-              name: doc.data().mentor_name
-            }
-            //setMentors([...mentors, {...mentor}])
-            mentorList.push(mentor)
+          var mentor = {
+            id: doc.data().mentor_id,
+            name: doc.data().mentor_name,
+          };
+          //setMentors([...mentors, {...mentor}])
+          mentorList.push(mentor);
         });
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         console.log("Error getting documents: ", error);
-    });
+      });
 
-    setMentors(mentorList)  
-  }, []);
+    setMentors(mentorList);
+  }, [user]);
 
   //Call useEffect to run when componenet mounted for Groups
   useEffect(() => {
-    //Retrieving a specific user data from the collection called "users"
-    //Using their user.uid to select specific user
-    var docRef = db.collection("users").doc(user.uid);
-    docRef.get().then((doc) => {
-      //Check if the the user exists
-      if (doc.exists) {
-          //Set state with specific user data from db 
-          // doc.data().<enter specific firebase attribute >
-          setGroups(doc.data().groups) ;
-
-      } else {
-          // doc.data() will be undefined in this case if user does not exist
-          console.log("No such document!");
-          setGroups([]); 
-      }
-  }).catch((error) => {
-      console.log("Error getting document:", error);
-  });
-  
-  }, []);
+    getUserSubspaces(user).then((data) => {
+      console.log("Data from LS " + data[0])
+      setGroups(data);
+    });
+  }, [user]);
 
   return (
     <div>
@@ -94,16 +97,10 @@ export default function LeftSidebar() {
         <Toolbar />
         <Divider />
         <div className={classes.drawerContainer}>
-          <Groups
-            name="Groups"
-            list={groups}
-          />
+          <Groups name="Groups" list={groups} />
 
           <Divider />
-          <Mentors
-            name="Mentors"
-            list={mentors}
-          />
+          <Mentors name="Mentors" list={mentors} />
         </div>
       </Drawer>
     </div>

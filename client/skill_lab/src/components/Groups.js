@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import {
+  Avatar,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import { Redirect, useHistory } from "react-router";
-import { Link } from "react-router-dom";
-import { selectUser } from "../store/reducers/userSlice";
-import { useSelector } from "react-redux";
-import { db } from "../firebase";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,7 +53,7 @@ export default function Groups({ name, list }) {
               key={text}
             >
               <ListItemIcon>
-                <AccountCircleIcon />
+                <Avatar  />
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
