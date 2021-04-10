@@ -56,27 +56,21 @@ export default function Groups() {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const subspaces = useSelector(selectGroups);
-  const [groups, setGroups] = useState([]);
 
   //Call useEffect to run when componenet mounted for Groups
   //Need to do more research
   useEffect(() => {
-    getUserSubspaces(user)
-      .then((data) => {
-        console.log("Data from LS " + data[0]);
-
-        //Store groups to redux
-        dispatch(
-          storeGroups({
-            groups: data,
-          })
-        );
-      })
-      .then(function () {
-        //Assigning groups to state
-        setGroups(subspaces);
-      });
+    getUserSubspaces(user).then((data) => {
+      console.log("Data from LS " + data[0]);
+      //Store groups to redux
+      dispatch(
+        storeGroups({
+          groups: data,
+        })
+      );
+    });
   }, []);
+  
   //Direct to group subspace page
   const goToSubspace = (subspaceName) => {
     history.push({
