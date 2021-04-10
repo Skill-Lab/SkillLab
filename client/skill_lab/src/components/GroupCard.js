@@ -8,8 +8,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { db } from "../firebase";
-import { useSelector } from "react-redux";
-import { selectUser } from "../store/reducers/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser, addGroup, leaveGroup } from "../store/reducers/userSlice";
 
 const useStyles = makeStyles({
   root: {
@@ -33,8 +33,10 @@ export default function GroupCard({
   const user = useSelector(selectUser);
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+
   //Add group to db
-  function addGroup(id) {
+  function addSubspace(id) {
     //groupData.name.isJoined = tr
     var entry = {
       subspace_id: id,
@@ -42,18 +44,25 @@ export default function GroupCard({
       user_id: user.uid,
       imageURL: imageURL,
     };
+
     db.collection("userSubspace")
       .add(entry)
       .then((docRef) => {
         console.log("Added Group to list" + docRef.id);
         setJoinGroup(true);
+        dispatch(
+          addGroup({
+            id: id,
+            name: name,
+            imageURL: imageURL,
+          })
+        );
       });
   }
 
   //Delete group from db
-  async function leaveGroup(id) {
-    await db
-      .collection("userSubspace")
+  function leaveSubspace(id) {
+    db.collection("userSubspace")
       .where("user_id", "==", user.uid)
       .get()
       .then((querySnapshot) => {
@@ -62,6 +71,7 @@ export default function GroupCard({
             doc.ref.delete();
             console.log("Successfully deleted group");
             setJoinGroup(false);
+            dispatch(leaveGroup(id));
           }
         });
       });
@@ -87,7 +97,7 @@ export default function GroupCard({
       <CardActions>
         {/* Check if user has alread joined or not  */}
         {!joinGroup ? (
-          <Button onClick={() => addGroup(id)} size="small" color="primary">
+          <Button onClick={() => addSubspace(id)} size="small" color="primary">
             Join
           </Button>
         ) : (
@@ -101,7 +111,7 @@ export default function GroupCard({
             Learn More
           </Button>
         ) : (
-          <Button onClick={() => leaveGroup(id)} size="small" color="secondary">
+          <Button onClick={() => leaveSubspace(id)} size="small" color="secondary">
             Leave
           </Button>
         )}
