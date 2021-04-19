@@ -3,9 +3,9 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../store/reducers/userSlice";
 import { auth } from "../firebase";
-import  { Redirect } from 'react-router-dom'
-import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import { Redirect } from "react-router-dom";
+import IconButton from "@material-ui/core/IconButton";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +58,7 @@ export default function Navbar() {
   const signout = () => {
     dispatch(logout);
     auth.signOut();
-    <Redirect to='/'  />
+    <Redirect to="/" />;
   };
   return (
     <div className={classes.root}>
@@ -79,16 +79,13 @@ export default function Navbar() {
             //Display interests, logout on navbar
             <div className={classes.rightButtons}>
               <Button href="/interestPage">Interests</Button>
-              <Button  onClick={signout}>
-                Logout
-              </Button>
+              <Button onClick={signout}>Logout</Button>
               <IconButton
                 href="/userProfile"
                 //onClick={handleMenu}
-                color="#ff5c5c"
               >
                 <AccountCircle />
-                </IconButton>
+              </IconButton>
             </div>
           )}
         </Toolbar>

@@ -57,14 +57,14 @@ export default function Comment({
   const [kc, setKudosCount] = React.useState(kudosCount);
   const [kg, setKudosGiven] = React.useState(kudosGiven);
 
-  const setKudos = () => {
+  async function setKudos() {
     setKudosCount(kg ? kc - 1 : kc + 1);
     setKudosGiven(!kg);
 
     //Find Comment
     //Update
     console.log("Updating commentID: ", comment_id);
-    var commentRef = db.doc(comment_id);
+    var commentRef = await db.doc(comment_id);
 
     return commentRef
       .update({

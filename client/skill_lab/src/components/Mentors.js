@@ -6,7 +6,7 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Redirect, useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,17 +19,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export default function Mentors({ name, list }) {
- const history = useHistory();
- const classes = useStyles();
+  const history = useHistory();
+  const classes = useStyles();
 
- //Direct to user profile page
-const goToProfile =(mentorID) => {
+  //Direct to user profile page
+  const goToProfile = (mentorID) => {
     history.push({
-        pathname: `/userPorfile/${mentorID}}`
-    })
-   }
+      pathname: `/userProfile/${mentorID}}`,
+    });
+  };
 
   return (
     <div className={classes.root}>
@@ -42,9 +41,8 @@ const goToProfile =(mentorID) => {
           <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
         {list.map((mentor) => (
-          
           <AccordionDetails key={mentor.id}>
-            <ListItem key={mentor.id} value={mentor.name} button >
+            <ListItem key={mentor.id} value={mentor.name} button>
               <ListItemIcon>
                 <AccountCircleIcon />
               </ListItemIcon>
