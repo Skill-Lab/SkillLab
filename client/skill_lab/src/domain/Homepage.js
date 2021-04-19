@@ -55,6 +55,8 @@ function createPosts(pd) {
           name={post.name}
           timestamp={post.timestamp}
           message={post.message}
+          kudosCount={post.kudosCount}
+          kudosGiven={post.kudosGiven}
           commentsData={post.commentsData}
         />
       </Box>
@@ -81,6 +83,8 @@ export default function Homepage() {
         reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
         pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
         culpa qui officia deserunt mollit anim id est laborum.`,
+      kudosCount: 8,
+      kudosGiven: false,
       commentsData: [
         {
           name: "Cindy Carrillo",
@@ -109,6 +113,8 @@ export default function Homepage() {
       name: "Alexis Huerta",
       timestamp: DateTime.now(),
       message: `This is a shorter post message.`,
+      kudosCount: 108,
+      kudosGiven: false,
       commentsData: [
         {
           name: "Cindy Carrillo",
@@ -139,6 +145,8 @@ export default function Homepage() {
         name: user.displayName,
         timestamp: DateTime.now().toString(),
         message: newPostMessage,
+        kudosCount: 0,
+        kudosGiven: false,
         commentsData: [],
       };
       setPosts([
@@ -147,6 +155,8 @@ export default function Homepage() {
             name={newPost.name}
             timestamp={newPost.timestamp}
             message={newPost.message}
+            kudosCount={newPost.kudosCount}
+            kudosGiven={newPost.kudosGiven}
             commentsData={newPost.commentsData}
           />
         </Box>,

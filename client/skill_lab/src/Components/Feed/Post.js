@@ -70,13 +70,23 @@ function getInitials(fullName) {
   return initials;
 }
 
-export default function Post({ name, timestamp, message, commentsData, post_id }) {
+export default function Post({
+  name,
+  timestamp,
+  message,
+  kudosCount,
+  kudosGiven,
+  commentsData,
+  post_id,
+}) {
   const classes = useStyles();
   const user = useSelector(selectUser);
   const { DateTime } = require("luxon");
 
   const [comments, setComments] = React.useState(createComments(commentsData));
   const [newCommentMessage, setNewCommentMessage] = React.useState("");
+  const [kc, setKudosCount] = React.useState(kudosCount);
+  const [kg, setKudosGiven] = React.useState(kudosGiven);
 
   const addNewComment = () => {
     if (newCommentMessage.trim() !== "") {
@@ -86,7 +96,7 @@ export default function Post({ name, timestamp, message, commentsData, post_id }
         message: newCommentMessage,
         kudosCount: 0,
         kudosGiven: false,
-        post_id: post_id
+        post_id: post_id,
       };
 
       // Add a new comment to DB with a generated id.
@@ -94,9 +104,9 @@ export default function Post({ name, timestamp, message, commentsData, post_id }
         .add(newComment)
         .then((docRef) => {
           console.log("Added comment: Document written with ID: ", docRef.id);
-          newComment.comment_id = docRef.id
+          newComment.comment_id = docRef.id;
         })
-        .then(()=>{
+        .then(() => {
           setComments([
             <AccordionDetails key={JSON.stringify(newComment)}>
               <Comment
@@ -116,6 +126,11 @@ export default function Post({ name, timestamp, message, commentsData, post_id }
         });
       setNewCommentMessage("");
     }
+  };
+
+  const setKudos = () => {
+    setKudosCount(kg ? kc - 1 : kc + 1);
+    setKudosGiven(!kg);
   };
 
   function handleKeyPress(event) {
@@ -145,10 +160,14 @@ export default function Post({ name, timestamp, message, commentsData, post_id }
           <Box width={1} mx={1} mb={1}>
             <Grid container justify="center" spacing={6}>
               <Grid item>
+                {kc}&nbsp;
                 <Button
+                  variant={kg ? "contained" : "text"}
+                  disableElevation={kg}
                   color="secondary"
                   size="small"
                   startIcon={<WhatshotIcon />}
+                  onClick={setKudos}
                 >
                   Kudos
                 </Button>

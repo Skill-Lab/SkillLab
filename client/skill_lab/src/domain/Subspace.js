@@ -58,6 +58,8 @@ function createPosts(pd) {
           name={post.name}
           timestamp={post.timestamp}
           message={post.message}
+          kudosCount={post.kudosCount}
+          kudosGiven={post.kudosGiven}
           commentsData={post.commentsData}
           post_id={"posts/" + post.post_id}
         />
@@ -89,7 +91,9 @@ export default function Subspace() {
         name: user.displayName,
         timestamp: DateTime.now().toString(),
         message: newPostMessage,
-        kudos: 1,
+        // kudos: 1,
+        kudosCount: 0,
+        kudosGiven: false,
         subspace_id: "subspace/" + subspaceName.toLowerCase(),
         commentsData: [],
       };
@@ -109,6 +113,8 @@ export default function Subspace() {
                 name={newPost.name}
                 timestamp={newPost.timestamp}
                 message={newPost.message}
+                kudosCount={newPost.kudosCount}
+                kudosGiven={newPost.kudosGiven}
                 commentsData={newPost.commentsData}
                 post_id={"posts/" + newPost.post_id}
               />
@@ -138,7 +144,7 @@ export default function Subspace() {
         if (doc.exists) {
           console.log("Document data:", doc.data().description);
           setDescription(doc.data().description);
-          setMembers(doc.data().memebers);
+          setMembers(doc.data().members);
           //setMentors(doc.data().mentors);
           setPosts(doc.data().posts);
 
