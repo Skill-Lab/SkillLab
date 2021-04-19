@@ -5,9 +5,13 @@ import {
   CardActions,
   CssBaseline,
   Grid,
+  InputLabel,
   Fab,
+  FormControl,
   IconButton,
   makeStyles,
+  MenuItem,
+  Select,
   TextField,
   Toolbar,
   Button,
@@ -22,7 +26,7 @@ import { Redirect } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
 import Post from "../components/Feed/Post";
 // import { auth } from "../firebase";
-import { selectUser } from "../store/reducers/userSlice";
+import { selectGroups, selectUser } from "../store/reducers/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
   },
   postCreationCard: {
     width: "32rem",
+  },
+  subspaceFormControl: {
+    marginBottom: theme.spacing(2),
+    width: "100%",
   },
 }));
 
@@ -70,6 +78,7 @@ export default function Homepage() {
   // const dispatch = useDispatch();
   // const history = useHistory();
   const user = useSelector(selectUser);
+  const subspaces = useSelector(selectGroups);
   const { DateTime } = require("luxon");
 
   var postsData = [
@@ -137,6 +146,7 @@ export default function Homepage() {
   const [open, setOpen] = React.useState(false);
   const [posts, setPosts] = React.useState(createPosts(postsData));
   const [newPostMessage, setNewPostMessage] = React.useState("");
+  const [selectedSubspace, setSelectedSubspace] = React.useState("");
 
   const addNewPost = () => {
     if (newPostMessage.trim() !== "") {
@@ -167,6 +177,12 @@ export default function Homepage() {
     setOpen(false);
   };
 
+  const cancelNewPost = () => {
+    setOpen(false);
+    setSelectedSubspace("AI");
+    setNewPostMessage("");
+  };
+
   //Retrieve User
   //Check if user logged in
   //If not logged in, redirect user to home page
@@ -179,6 +195,7 @@ export default function Homepage() {
       addNewPost();
       event.preventDefault();
     }
+    if (event.key === "Escape") cancelNewPost();
   }
 
   return (
@@ -209,6 +226,23 @@ export default function Homepage() {
                 </Grid>
                 <Grid item xs={12}>
                   <Box p={1}>
+                    <FormControl className={classes.subspaceFormControl}>
+                      <InputLabel>Subspace</InputLabel>
+                      <Select
+                        value={selectedSubspace}
+                        onChange={(event) => {
+                          setSelectedSubspace(event.target.value);
+                          console.log(event.target.value);
+                          console.log(selectedSubspace);
+                        }}
+                      >
+                        {subspaces.map((subspace) => (
+                          <MenuItem value={subspace.id} key={subspace.id}>
+                            {subspace.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                     <TextField
                       multiline
                       rows={5}
@@ -226,7 +260,7 @@ export default function Homepage() {
                 </Grid>
                 <Grid item container justify="center" spacing={3}>
                   <Grid item>
-                    <Button onClick={() => setOpen(false)}>Cancel</Button>
+                    <Button onClick={cancelNewPost}>Cancel</Button>
                   </Grid>
                   <Grid item>
                     <Button
