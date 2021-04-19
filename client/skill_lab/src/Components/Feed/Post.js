@@ -88,7 +88,7 @@ export default function Post({
   const [kc, setKudosCount] = React.useState(kudosCount);
   const [kg, setKudosGiven] = React.useState(kudosGiven);
 
-  const addNewComment = () => {
+  async function addNewComment() {
     if (newCommentMessage.trim() !== "") {
       const newComment = {
         name: user.displayName,
@@ -100,7 +100,8 @@ export default function Post({
       };
 
       // Add a new comment to DB with a generated id.
-      db.collection("comments")
+      await db
+        .collection("comments")
         .add(newComment)
         .then((docRef) => {
           console.log("Added comment: Document written with ID: ", docRef.id);
@@ -115,7 +116,7 @@ export default function Post({
                 message={newComment.message}
                 kudosCount={newComment.kudosCount}
                 kudosGiven={newComment.kudosGiven}
-                comment_id={newComment.comment_id}
+                comment_id={"comments/" + newComment.comment_id}
               />
             </AccordionDetails>,
             ...comments,
@@ -126,9 +127,10 @@ export default function Post({
         });
       setNewCommentMessage("");
     }
-  };
+  }
 
   const setKudos = () => {
+    console.log("here is kg: " + kg);
     setKudosCount(kg ? kc - 1 : kc + 1);
     setKudosGiven(!kg);
   };

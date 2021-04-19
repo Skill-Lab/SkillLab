@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 
 function createPosts(pd) {
   let posts = pd.map((post) => {
+    console.log("Here is post kudosCount: " + post.kudosCount);
     return (
       <Box key={JSON.stringify(post)} width="100%">
         <Post
@@ -171,6 +172,8 @@ export default function Subspace() {
                   timestamp: doc.data().timestamp,
                   message: doc.data().message,
                   post_id: doc.id,
+                  kudosCount: doc.data().kudosCount,
+                  kudosGiven: doc.data().kudosGiven,
                   commentsData: [],
                 };
 
