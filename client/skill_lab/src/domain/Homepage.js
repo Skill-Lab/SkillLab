@@ -27,6 +27,7 @@ import LeftSidebar from "../components/LeftSidebar";
 import Post from "../components/Feed/Post";
 // import { auth } from "../firebase";
 import { selectGroups, selectUser } from "../store/reducers/userSlice";
+import { db } from "../firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -149,6 +150,9 @@ export default function Homepage() {
   const [selectedSubspace, setSelectedSubspace] = React.useState("");
 
   const addNewPost = () => {
+    if (selectedSubspace === "") {
+      alert("Select a subspace");
+    }
     if (newPostMessage.trim() !== "") {
       // creating newPost is necessary for the key
       const newPost = {
@@ -157,24 +161,41 @@ export default function Homepage() {
         message: newPostMessage,
         kudosCount: 0,
         kudosGiven: false,
+        subspace_id: "subspace/" + selectedSubspace,
         commentsData: [],
       };
-      setPosts([
-        <Box key={JSON.stringify(newPost)} width="100%">
-          <Post
-            name={newPost.name}
-            timestamp={newPost.timestamp}
-            message={newPost.message}
-            kudosCount={newPost.kudosCount}
-            kudosGiven={newPost.kudosGiven}
-            commentsData={newPost.commentsData}
-          />
-        </Box>,
-        ...posts,
-      ]);
+      // Add a new post to DB with a generated id.
+      db.collection("posts")
+        .add(newPost)
+        .then((docRef) => {
+          console.log("Added post: Document written with ID: ", docRef.id);
+          newPost.post_id = docRef.id;
+        })
+        .then(() => {
+          console.log("New post id: ", newPost.post_id);
+          setPosts([
+            <Box key={JSON.stringify(newPost)} width="100%">
+              <Post
+                name={newPost.name}
+                timestamp={newPost.timestamp}
+                message={newPost.message}
+                kudosCount={newPost.kudosCount}
+                kudosGiven={newPost.kudosGiven}
+                commentsData={newPost.commentsData}
+                post_id={"posts/" + newPost.post_id}
+              />
+            </Box>,
+            ...posts,
+          ]);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+
       setNewPostMessage("");
+      setSelectedSubspace("");
+      setOpen(false);
     }
-    setOpen(false);
   };
 
   const cancelNewPost = () => {
