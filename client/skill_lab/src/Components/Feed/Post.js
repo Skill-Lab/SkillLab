@@ -31,7 +31,7 @@ import { db } from "../../firebase";
 
 const useStyles = makeStyles({
   root: {
-    width: "32rem",
+    width: "36rem",
     display: "inline-block",
     alignItems: "start",
     boxShadow: "0px 14px 80px rgba(34, 35, 58, 0.2)",
