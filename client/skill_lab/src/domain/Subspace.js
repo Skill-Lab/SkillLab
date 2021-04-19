@@ -22,6 +22,7 @@ import { deepOrange } from "@material-ui/core/colors";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
+import RightSidebar from "../components/RightSidebar";
 import { db } from "../firebase";
 import { selectUser } from "../store/reducers/userSlice";
 import Post from "../components/Feed/Post";
@@ -74,9 +75,18 @@ export default function Subspace() {
   var { subspaceName } = useParams();
 
   var postsData = [];
+  var sampleMembers = [
+    "Brian Tao",
+    "Alexis Huerta",
+    "Nathan Abegaz",
+    "Cindy Carrillo",
+  ];
 
+  const [members, setMembers] = useState(sampleMembers);
+  // const [description, setDescription] = useState(
+  //   createSampleDescription(subspaceName, sampleMembers.length)
+  // );
   const [description, setDescription] = useState();
-  const [members, setMembers] = useState();
 
   const [loading, setLoading] = useState(true);
 
@@ -91,7 +101,6 @@ export default function Subspace() {
         name: user.displayName,
         timestamp: DateTime.now().toString(),
         message: newPostMessage,
-        // kudos: 1,
         kudosCount: 0,
         kudosGiven: false,
         subspace_id: "subspace/" + subspaceName.toLowerCase(),
@@ -235,6 +244,8 @@ export default function Subspace() {
         <h1>{subspaceName}</h1>
         {loading ? <CircularProgress /> : <>{posts}</>}
       </Box>
+      {/* Right now the members are sample data bc database doesn't have members for subspaces, it seems */}
+      <RightSidebar description={description} members={sampleMembers} />
       <Fab
         variant="extended"
         className={classes.fab}
