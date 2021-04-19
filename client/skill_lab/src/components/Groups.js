@@ -57,7 +57,7 @@ export default function Groups() {
   const dispatch = useDispatch();
   const subspaces = useSelector(selectGroups);
 
-  //Call useEffect to run when componenet mounted for Groups
+  //Call useEffect to run when component mounted for Groups
   //Need to do more research
   useEffect(() => {
     getUserSubspaces(user).then((data) => {

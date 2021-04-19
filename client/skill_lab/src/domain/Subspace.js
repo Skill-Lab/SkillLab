@@ -22,6 +22,7 @@ import { deepOrange } from "@material-ui/core/colors";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
+import RightSidebar from "../components/RightSidebar";
 import { db } from "../firebase";
 import { selectUser } from "../store/reducers/userSlice";
 import Post from "../components/Feed/Post";
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: deepOrange[600],
     position: "fixed",
     bottom: theme.spacing(2),
-    right: theme.spacing(2),
+    right: theme.spacing(39),
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -52,12 +53,15 @@ const useStyles = makeStyles((theme) => ({
 
 function createPosts(pd) {
   let posts = pd.map((post) => {
+    console.log("Here is post kudosCount: " + post.kudosCount);
     return (
       <Box key={JSON.stringify(post)} width="100%">
         <Post
           name={post.name}
           timestamp={post.timestamp}
           message={post.message}
+          kudosCount={post.kudosCount}
+          kudosGiven={post.kudosGiven}
           commentsData={post.commentsData}
           post_id={"posts/" + post.post_id}
         />
@@ -72,9 +76,18 @@ export default function Subspace() {
   var { subspaceName } = useParams();
 
   var postsData = [];
+  var sampleMembers = [
+    "Brian Tao",
+    "Alexis Huerta",
+    "Nathan Abegaz",
+    "Cindy Carrillo",
+  ];
 
+  const [members, setMembers] = useState(sampleMembers);
+  // const [description, setDescription] = useState(
+  //   createSampleDescription(subspaceName, sampleMembers.length)
+  // );
   const [description, setDescription] = useState();
-  const [members, setMembers] = useState();
 
   const [loading, setLoading] = useState(true);
 
@@ -89,7 +102,8 @@ export default function Subspace() {
         name: user.displayName,
         timestamp: DateTime.now().toString(),
         message: newPostMessage,
-        kudos: 1,
+        kudosCount: 0,
+        kudosGiven: false,
         subspace_id: "subspace/" + subspaceName.toLowerCase(),
         commentsData: [],
       };
@@ -109,6 +123,8 @@ export default function Subspace() {
                 name={newPost.name}
                 timestamp={newPost.timestamp}
                 message={newPost.message}
+                kudosCount={newPost.kudosCount}
+                kudosGiven={newPost.kudosGiven}
                 commentsData={newPost.commentsData}
                 post_id={"posts/" + newPost.post_id}
               />
@@ -138,7 +154,7 @@ export default function Subspace() {
         if (doc.exists) {
           console.log("Document data:", doc.data().description);
           setDescription(doc.data().description);
-          setMembers(doc.data().memebers);
+          setMembers(doc.data().members);
           //setMentors(doc.data().mentors);
           setPosts(doc.data().posts);
 
@@ -156,6 +172,8 @@ export default function Subspace() {
                   timestamp: doc.data().timestamp,
                   message: doc.data().message,
                   post_id: doc.id,
+                  kudosCount: doc.data().kudosCount,
+                  kudosGiven: doc.data().kudosGiven,
                   commentsData: [],
                 };
 
@@ -229,6 +247,8 @@ export default function Subspace() {
         <h1>{subspaceName}</h1>
         {loading ? <CircularProgress /> : <>{posts}</>}
       </Box>
+      {/* Right now the members are sample data bc database doesn't have members for subspaces, it seems */}
+      <RightSidebar description={description} members={sampleMembers} />
       <Fab
         variant="extended"
         className={classes.fab}

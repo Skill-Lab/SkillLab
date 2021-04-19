@@ -30,7 +30,7 @@ export default function LeftSidebar() {
   const [groups, setGroups] = useState([]);
   const [mentors, setMentors] = useState([]);
 
-  //Call useEffect to run when componenet mounted for Mentors
+  //Call useEffect to run when component mounted for Mentors
   useEffect(() => {
     //Retrieving a specific user data from the collection called "users"
     //Using their user.uid to select specific user
@@ -65,9 +65,8 @@ export default function LeftSidebar() {
         }}
       >
         <Toolbar />
-        <Divider />
         <div className={classes.drawerContainer}>
-          <Groups/>
+          <Groups />
           <Divider />
           <Mentors name="Mentors" list={mentors} />
         </div>
