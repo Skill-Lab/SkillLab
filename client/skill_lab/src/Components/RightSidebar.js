@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { db } from "../firebase";
 import { selectUser } from "../store/reducers/userSlice";
 import Groups from "./Groups";
+import ProfileList from "./ProfileList";
 import SimpleAccordion from "./SimpleAccordion";
 
 const drawerWidth = 300;
@@ -45,7 +46,7 @@ export default function RightSidebar({ description, members }) {
         <div className={classes.drawerContainer}>
           <div className={classes.description}>{description}</div>
           <Divider />
-          <SimpleAccordion name="Members" list={members} />
+          <ProfileList name="Members" list={members} />
         </div>
       </Drawer>
     </div>
