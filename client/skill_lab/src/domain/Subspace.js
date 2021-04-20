@@ -76,14 +76,8 @@ export default function Subspace() {
   var { subspaceName } = useParams();
 
   var postsData = [];
-  var sampleMembers = [
-    "Brian Tao",
-    "Alexis Huerta",
-    "Nathan Abegaz",
-    "Cindy Carrillo",
-  ];
 
-  const [members, setMembers] = useState(sampleMembers);
+  const [members, setMembers] = useState([]);
   // const [description, setDescription] = useState(
   //   createSampleDescription(subspaceName, sampleMembers.length)
   // );
@@ -106,6 +100,7 @@ export default function Subspace() {
         kudosGiven: false,
         subspace_id: "subspace/" + subspaceName.toLowerCase(),
         commentsData: [],
+        user_id: user.uid,
       };
 
       // Add a new post to DB with a generated id.
@@ -141,10 +136,7 @@ export default function Subspace() {
     setOpen(false);
   };
 
-  // const [subspaceName, setSubspaceName] = useState();
-  // setSubspaceName(useParams());
-
-  //Make retrieve data from db
+  //Make retrieve posts from db
   useEffect(() => {
     setLoading(true);
     var docRef = db.collection("subspace").doc(subspaceName.toLowerCase());
@@ -154,7 +146,6 @@ export default function Subspace() {
         if (doc.exists) {
           console.log("Document data:", doc.data().description);
           setDescription(doc.data().description);
-          setMembers(doc.data().members);
           //setMentors(doc.data().mentors);
           setPosts(doc.data().posts);
 
@@ -224,6 +215,36 @@ export default function Subspace() {
       });
   }, [subspaceName]);
 
+  //Render group memebers from db
+  useEffect(() => {
+    const groupMemberList = [];
+
+    //Retreive collection userSubspace
+    db.collection("userSubspace")
+      //Search through each doc ref
+      //Find where subspace name for each doc is equal to current subspace name
+      .where("subspace_id", "==", subspaceName.toLowerCase())
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          //Store each member as an object
+          // var member = {
+          //   id: doc.data().user_id,
+          //   name: doc.data().user_name,
+          // };
+          //Add member to list
+
+          //TODO: add memeber as object instead of string array
+          groupMemberList.push(doc.data().user_name);
+        });
+        console.log("I have entedred to ");
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+    setMembers(groupMemberList);
+  }, [subspaceName]);
+
   //Retrieve User
   const user = useSelector(selectUser);
 
@@ -248,7 +269,7 @@ export default function Subspace() {
         {loading ? <CircularProgress /> : <>{posts}</>}
       </Box>
       {/* Right now the members are sample data bc database doesn't have members for subspaces, it seems */}
-      <RightSidebar description={description} members={sampleMembers} />
+      <RightSidebar description={description} members={members} />
       <Fab
         variant="extended"
         className={classes.fab}
