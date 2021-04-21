@@ -20,7 +20,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import { deepOrange } from "@material-ui/core/colors";
 
 import { useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
 import RightSidebar from "../components/RightSidebar";
 import { db } from "../firebase";
@@ -247,10 +246,6 @@ export default function Subspace() {
 
   //Retrieve User
   const user = useSelector(selectUser);
-
-  //Check if user logged in
-  //If not logged in, redirect user to home page
-  if (!user) return <Redirect to="/" />;
 
   function handleKeyPress(event) {
     if (event.key === "Enter") {
