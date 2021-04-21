@@ -9,9 +9,9 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { useDispatch } from "react-redux";
-import { login } from "../../store/reducers/userSlice";
+import { login, storeGroups } from "../../store/reducers/userSlice";
 import { useHistory } from "react-router-dom";
 
 function Copyright() {
@@ -50,7 +50,27 @@ const useStyles = makeStyles((theme) => ({
     height: "50%",
   },
 }));
+export async function getUserSubspaces(uid) {
+  var userSubspaces = [];
 
+  await db
+    .collection("userSubspace")
+    .where("user_id", "==", uid)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.docs.forEach((doc) => {
+        var subspace = {
+          id: doc.data().subspace_id,
+          name: doc.data().subspace_name,
+          imageURL: doc.data().imageURL,
+        };
+        console.log("Subspace name: " + doc.data().subspace_name);
+        userSubspaces.push(subspace);
+      });
+    });
+  console.log("User subspaces list: " + userSubspaces);
+  return userSubspaces;
+}
 export default function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -59,24 +79,39 @@ export default function Login() {
   const history = useHistory();
   const classes = useStyles();
 
+  var uid = "";
   //Use firebase to log user into app
   const loginToApp = (e) => {
     e.preventDefault();
 
-    auth.signInWithEmailAndPassword(email,password)
-    .then((userAuth) => {
-      dispatch(
-        login({
-          email: userAuth.user.email,
-          uid: userAuth.user.uid,
-          displayName: userAuth.user.displayName
-        })
-      );
-      history.push("/home")
-    })
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userAuth) => {
+        dispatch(
+          login({
+            email: userAuth.user.email,
+            uid: userAuth.user.uid,
+            displayName: userAuth.user.displayName,
+          })
+        );
+        uid = userAuth.user.uid;
+      })
+      .then(() => {
+        getUserSubspaces(uid).then((data) => {
+          console.log("Data from LS " + data[0]);
+          //Store groups to redux
+          dispatch(
+            storeGroups({
+              groups: data,
+            })
+          );
+        });
+      })
+      .then(() => {
+        history.push("/home");
+      })
 
-    .catch((error) => alert(error));
-
+      .catch((error) => alert(error));
   };
   return (
     <Container component="main" maxWidth="xs">
