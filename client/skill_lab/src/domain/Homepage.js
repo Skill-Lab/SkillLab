@@ -15,6 +15,7 @@ import {
   TextField,
   Toolbar,
   Button,
+  CircularProgress,
 } from "@material-ui/core";
 import CreateIcon from "@material-ui/icons/Create";
 import CloseIcon from "@material-ui/icons/Close";
@@ -221,35 +222,39 @@ export default function Homepage() {
 
   return (
     <div className={classes.root}>
-      <LeftSidebar />
-      <CssBaseline />
-      <Box mx="auto" p={2}>
-        <Toolbar />
-        <>{posts}</>
-      </Box>
-      <Fab
-        variant="extended"
-        className={classes.fab}
-        onClick={() => setOpen(true)}
-      >
-        <CreateIcon className={classes.extendedIcon} />
-        New Post
-      </Fab>
-      <Backdrop className={classes.backdrop} open={open}>
-        <Card className={classes.postCreationCard}>
-          <Box pb={2}>
-            <CardActions>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <IconButton onClick={() => setOpen(false)}>
-                    <CloseIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item xs={12}>
-                  <Box p={1}>
-                    <FormControl className={classes.subspaceFormControl}>
-                      <InputLabel>Subspace</InputLabel>
-                      <Select
+      {!subspaces ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <LeftSidebar />
+          <CssBaseline />
+          <Box mx="auto" p={2}>
+            <Toolbar />
+            <>{posts}</>
+          </Box>
+          <Fab
+            variant="extended"
+            className={classes.fab}
+            onClick={() => setOpen(true)}
+          >
+            <CreateIcon className={classes.extendedIcon} />
+            New Post
+          </Fab>
+          <Backdrop className={classes.backdrop} open={open}>
+            <Card className={classes.postCreationCard}>
+              <Box pb={2}>
+                <CardActions>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <IconButton onClick={() => setOpen(false)}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Box p={1}>
+                        <FormControl className={classes.subspaceFormControl}>
+                          <InputLabel>Subspace</InputLabel>
+                          {/* <Select
                         value={selectedSubspace}
                         onChange={(event) => {
                           setSelectedSubspace(event.target.value);
@@ -262,42 +267,44 @@ export default function Homepage() {
                             {subspace.name}
                           </MenuItem>
                         ))}
-                      </Select>
-                    </FormControl>
-                    <TextField
-                      multiline
-                      rows={5}
-                      fullWidth
-                      placeholder="What's on your mind?"
-                      variant="filled"
-                      value={newPostMessage}
-                      onChange={(event) =>
-                        setNewPostMessage(event.target.value)
-                      }
-                      onKeyPress={(event) => handleKeyPress(event)}
-                      inputRef={(input) => input && input.focus()}
-                    ></TextField>
-                  </Box>
-                </Grid>
-                <Grid item container justify="center" spacing={3}>
-                  <Grid item>
-                    <Button onClick={cancelNewPost}>Cancel</Button>
+                      </Select> */}
+                        </FormControl>
+                        <TextField
+                          multiline
+                          rows={5}
+                          fullWidth
+                          placeholder="What's on your mind?"
+                          variant="filled"
+                          value={newPostMessage}
+                          onChange={(event) =>
+                            setNewPostMessage(event.target.value)
+                          }
+                          onKeyPress={(event) => handleKeyPress(event)}
+                          inputRef={(input) => input && input.focus()}
+                        ></TextField>
+                      </Box>
+                    </Grid>
+                    <Grid item container justify="center" spacing={3}>
+                      <Grid item>
+                        <Button onClick={cancelNewPost}>Cancel</Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={addNewPost}
+                        >
+                          Post
+                        </Button>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={addNewPost}
-                    >
-                      Post
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </CardActions>
-          </Box>
-        </Card>
-      </Backdrop>
+                </CardActions>
+              </Box>
+            </Card>
+          </Backdrop>{" "}
+        </>
+      )}
     </div>
   );
 }
