@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -11,12 +11,9 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useHistory } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
-import { selectGroups, storeGroups } from "../store/reducers/userSlice";
-import { db } from "../firebase";
-import { setGroups, selectUser } from "../store/reducers/userSlice";
+import { useSelector } from "react-redux";
+import { selectGroups } from "../store/reducers/userSlice";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -27,50 +24,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-async function getUserSubspaces(user) {
-  var userSubspaces = [];
-
-  await db
-    .collection("userSubspace")
-    .where("user_id", "==", user.uid)
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.docs.forEach((doc) => {
-        var subspace = {
-          id: doc.data().subspace_id,
-          name: doc.data().subspace_name,
-          imageURL: doc.data().imageURL,
-        };
-        console.log("Subspace name: " + doc.data().subspace_name);
-        userSubspaces.push(subspace);
-      });
-    });
-  console.log("User subspaces list: " + userSubspaces);
-  return userSubspaces;
-}
-
 export default function Groups() {
   const classes = useStyles();
   const history = useHistory();
-  //Retrieve user from redux
-  const user = useSelector(selectUser);
-  const dispatch = useDispatch();
   const subspaces = useSelector(selectGroups);
 
-  //Call useEffect to run when component mounted for Groups
-  //Need to do more research
-  useEffect(() => {
-    getUserSubspaces(user).then((data) => {
-      console.log("Data from LS " + data[0]);
-      //Store groups to redux
-      dispatch(
-        storeGroups({
-          groups: data,
-        })
-      );
-    });
-  }, []);
-  
   //Direct to group subspace page
   const goToSubspace = (subspaceName) => {
     history.push({
@@ -87,6 +45,7 @@ export default function Groups() {
           id="panel1a-header"
         >
           <Typography className={classes.heading}>Groups</Typography>
+          {/* Retrieve subspaces from redux and render each item */}
         </AccordionSummary>
         {subspaces.map((text) => (
           <AccordionDetails key={text.id}>
