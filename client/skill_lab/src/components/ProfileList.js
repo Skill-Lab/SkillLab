@@ -7,9 +7,6 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import { Redirect } from "react-router";
-
-//Template Component
 
 const useStyles = makeStyles((theme) => ({
   root: {
