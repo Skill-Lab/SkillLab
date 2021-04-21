@@ -10,8 +10,8 @@ import SignUp from "../../domain/Authentication/SignUp.js";
 import WelcomePage from "../../domain/WelcomePage";
 import { useEffect } from "react";
 import { auth } from "../../firebase";
-import { useDispatch } from "react-redux";
-import { login, logout } from "../../store/reducers/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout, selectUser } from "../../store/reducers/userSlice";
 import Homepage from "../../domain/Homepage";
 import Navbar from "../Navbar";
 import InterestPage from "../../domain/InterestsPage";
@@ -20,6 +20,7 @@ import Subspace from "../../domain/Subspace";
 
 function App() {
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     auth.onAuthStateChanged((userAuth) => {
@@ -43,17 +44,27 @@ function App() {
     <div className="App">
       <Navbar />
       <Router>
-        <Switch>
-          <Route exact path="/" component={WelcomePage} />
-          <Route path="/signup" component={SignUp} />
-          <Route path="/home" component={Homepage} />
-          <Route path="/login" component={Login} />
-          <Route path="/interestPage" component={InterestPage} />
-          <Route path="/subspace/:subspaceName" component={Subspace} />
-          <Route path="/userProfile" component={UserProfile} />
-          {/* Routes not specified go to root */}
-          <Route render={() => <Redirect to="/" />} />
-        </Switch>
+        {!user ? (
+          <Switch>
+            {/* Available routes for users that are not signed in */}
+            <Route exact path="/" component={WelcomePage} />
+            <Route path="/signup" component={SignUp} />
+            <Route path="/login" component={Login} />
+            {/* Routes not specified go to root */}
+            <Route render={() => <Redirect to="/" />} />
+          </Switch>
+        ) : (
+          <Switch>
+            {/* Available routes for users that are signed in */}
+            <Route exact path="/" component={WelcomePage} />
+            <Route path="/signup" component={SignUp} />
+            <Route path="/login" component={Login} />
+            <Route path="/home" component={Homepage} />
+            <Route path="/interestPage" component={InterestPage} />
+            <Route path="/subspace/:subspaceName" component={Subspace} />
+            <Route path="/userProfile" component={UserProfile} />
+          </Switch>
+        )}
       </Router>
     </div>
   );
