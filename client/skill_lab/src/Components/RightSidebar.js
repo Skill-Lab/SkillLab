@@ -1,11 +1,6 @@
 import { Divider, Drawer, makeStyles, Toolbar } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-// import { db } from "../firebase";
-import { selectUser } from "../store/reducers/userSlice";
-import Groups from "./Groups";
+import React from "react";
 import ProfileList from "./ProfileList";
-import SimpleAccordion from "./SimpleAccordion";
 
 const drawerWidth = 300;
 
@@ -28,9 +23,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function RightSidebar({ description, members }) {
   const classes = useStyles();
-
-  //Retrieve user from redux
-  const user = useSelector(selectUser);
 
   return (
     <div>
