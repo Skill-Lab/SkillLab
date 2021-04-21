@@ -1,6 +1,6 @@
 import { Divider, Drawer, makeStyles, Toolbar } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { db } from "../firebase";
 import { selectUser } from "../store/reducers/userSlice";
 import Groups from "./Groups";
@@ -27,7 +27,6 @@ export default function LeftSidebar() {
   const user = useSelector(selectUser);
 
   //Create state for data being retrieved from db
-  const [groups, setGroups] = useState([]);
   const [mentors, setMentors] = useState([]);
 
   //Call useEffect to run when component mounted for Mentors

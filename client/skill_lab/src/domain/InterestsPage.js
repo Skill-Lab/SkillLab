@@ -6,7 +6,6 @@ import { db } from "../firebase";
 import { useSelector } from "react-redux";
 import { selectUser } from "../store/reducers/userSlice";
 
-
 const useStyles = makeStyles((theme) => ({
   title: {
     padding: theme.spacing(10),
@@ -101,8 +100,9 @@ export default function InterestPage() {
       });
     });
   }, [user]);
+
   return (
-    <div >
+    <div>
       <LeftSidebar />
       <div className={classes.title}></div>
       <div className={classes.content}>

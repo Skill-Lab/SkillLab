@@ -5,15 +5,9 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import {
-  Avatar,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
-import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
-import { selectGroups } from "../store/reducers/userSlice";
+import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -24,17 +18,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Groups() {
+//Direct to group subspace page
+const goToProfile = (profileID) => {};
+export default function ProfileList({ name, list }) {
   const classes = useStyles();
-  const history = useHistory();
-  const subspaces = useSelector(selectGroups);
-
-  //Direct to group subspace page
-  const goToSubspace = (subspaceName) => {
-    history.push({
-      pathname: `/subspace/${subspaceName}`,
-    });
-  };
 
   return (
     <div className={classes.root}>
@@ -44,21 +31,20 @@ export default function Groups() {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>Groups</Typography>
-          {/* Retrieve subspaces from redux and render each item */}
+          <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
-        {subspaces.map((text) => (
-          <AccordionDetails key={text.id}>
+        {list.map((text) => (
+          <AccordionDetails key={text}>
             <ListItem
-              onClick={() => goToSubspace(text.name)}
-              value={text.name}
+              onClick={() => goToProfile(text)}
+              value={text}
               button
-              key={text.id}
+              key={text}
             >
               <ListItemIcon>
-                <Avatar src={text.imageURL} />
+                <AccountCircleIcon />
               </ListItemIcon>
-              <ListItemText primary={text.name} />
+              <ListItemText primary={text} />
             </ListItem>
           </AccordionDetails>
         ))}

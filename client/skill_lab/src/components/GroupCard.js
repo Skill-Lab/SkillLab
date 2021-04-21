@@ -42,6 +42,7 @@ export default function GroupCard({
       subspace_id: id,
       subspace_name: name,
       user_id: user.uid,
+      user_name: user.displayName,
       imageURL: imageURL,
     };
 
@@ -111,7 +112,11 @@ export default function GroupCard({
             Learn More
           </Button>
         ) : (
-          <Button onClick={() => leaveSubspace(id)} size="small" color="secondary">
+          <Button
+            onClick={() => leaveSubspace(id)}
+            size="small"
+            color="secondary"
+          >
             Leave
           </Button>
         )}
