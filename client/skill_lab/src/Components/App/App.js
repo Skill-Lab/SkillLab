@@ -62,7 +62,7 @@ function App() {
             <Route path="/home" component={Homepage} />
             <Route path="/interestPage" component={InterestPage} />
             <Route path="/subspace/:subspaceName" component={Subspace} />
-            <Route path="/userProfile" component={UserProfile} />
+            <Route path="/userProfile/:user_id" component={UserProfile} />
           </Switch>
         )}
       </Router>
