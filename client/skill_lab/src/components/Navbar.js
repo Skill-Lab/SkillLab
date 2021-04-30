@@ -65,7 +65,7 @@ export default function Navbar() {
       <AppBar position="fixed" className={classes.navbar}>
         <Toolbar className={classes.toolbar}>
           <Button startIcon={icon_Logo} href="/"></Button>
-
+          
           {/* Check if user is signed in or not */}
           {!user ? (
             //User is not signed in
@@ -81,7 +81,7 @@ export default function Navbar() {
               <Button href="/interestPage">Interests</Button>
               <Button onClick={signout}>Logout</Button>
               <IconButton
-                href="/userProfile"
+                href={`/userProfile/${user.uid}`}
                 //onClick={handleMenu}
               >
                 <AccountCircle />
