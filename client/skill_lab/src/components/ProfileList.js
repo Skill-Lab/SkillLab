@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,10 +19,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//Direct to group subspace page
-const goToProfile = (profileID) => {};
 export default function ProfileList({ name, list }) {
   const classes = useStyles();
+  const history = useHistory();
+
+  //Direct to group subspace page
+  const goToProfile = (profileID) => {
+    history.push({
+      pathname: `/userProfile/${profileID}`,
+    });
+  };
 
   return (
     <div className={classes.root}>
@@ -34,17 +41,17 @@ export default function ProfileList({ name, list }) {
           <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
         {list.map((text) => (
-          <AccordionDetails key={text}>
+          <AccordionDetails key={text.id}>
             <ListItem
-              onClick={() => goToProfile(text)}
-              value={text}
+              onClick={() => goToProfile(text.id)}
+              value={text.name}
               button
-              key={text}
+              key={text.id}
             >
               <ListItemIcon>
                 <AccountCircleIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={text.name} />
             </ListItem>
           </AccordionDetails>
         ))}
