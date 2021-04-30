@@ -227,14 +227,14 @@ export default function Subspace() {
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           //Store each member as an object
-          // var member = {
-          //   id: doc.data().user_id,
-          //   name: doc.data().user_name,
-          // };
+          var member = {
+            id: doc.data().user_id,
+            name: doc.data().user_name,
+          };
           //Add member to list
 
           //TODO: add memeber as object instead of string array
-          groupMemberList.push(doc.data().user_name);
+          groupMemberList.push(member);
         });
         console.log("I have entedred to ");
       })

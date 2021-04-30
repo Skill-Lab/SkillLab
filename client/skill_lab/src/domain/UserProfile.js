@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Avatar,
@@ -10,6 +10,8 @@ import {
 } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { selectUser } from "../store/reducers/userSlice";
+import { useParams } from "react-router";
+import { db } from "../firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,6 +85,58 @@ export default function Profile() {
   const classes = useStyles();
   const user = useSelector(selectUser);
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [github, setGitHub] = useState("");
+  const [dribbble, setDribbble] = useState("");
+  const [website, setWebsite] = useState("");
+
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
+
+  function updateProfile() {
+    var userRef = db.doc("users/" + user.uid);
+
+    return userRef
+      .update({
+        email: email,
+        linkedin: linkedin,
+        twitter: twitter,
+        github: github,
+        dribbble: dribbble,
+        website: website,
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch((error) => {
+        // The document probably doesn't exist.
+        console.error("Error updating document: ", error);
+      });
+  }
+
+  var { user_id } = useParams();
+  useEffect(() => {
+    var docRef = db.collection("users").doc(user_id);
+    docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log("User first name:", doc.data().firstName);
+          setName(doc.data().firstName + doc.data().lastName);
+          setEmail(doc.data().email);
+          setIsCurrentUser(user_id === user.uid);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+          setName("");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  });
   function FormRow() {
     return (
       <Grid container spacing={3}>
@@ -90,11 +144,9 @@ export default function Profile() {
           <Card className={classes.content} variant="outlined">
             <CardHeader
               avatar={
-                <Avatar className={classes.avatar}>
-                  {getInitials(user.displayName)}
-                </Avatar>
+                <Avatar className={classes.avatar}>{getInitials(name)}</Avatar>
               }
-              title={user.displayName}
+              title={name}
             />
           </Card>
           <form className={classes.description} noValidate autoComplete="off">
@@ -105,17 +157,22 @@ export default function Profile() {
               rows={8}
               defaultValue="My name is John and I have 3 years of industry experience in software development..."
               variant="filled"
+              disabled={!isCurrentUser}
             />
           </form>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            //onClick={updateBio}
-          >
-            Update Bio
-          </Button>
+          {isCurrentUser ? (
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              //onClick={updateBio}
+            >
+              Update Bio
+            </Button>
+          ) : (
+            <></>
+          )}
         </Card>
       </Grid>
     );
@@ -135,7 +192,9 @@ export default function Profile() {
               name="email"
               autoComplete="email"
               autoFocus
-              value={user.email}
+              defaultValue={email}
+              disabled={!isCurrentUser}
+              
             />
             <TextField
               variant="outlined"
@@ -144,8 +203,10 @@ export default function Profile() {
               name="linkedin"
               label="LinkedIn"
               id="linkedin"
+              autoFocus
               autoComplete="linkedin"
-              //value={linkedin}
+              disabled={!isCurrentUser}
+              defaultValue={linkedin}
             />
             <TextField
               variant="outlined"
@@ -156,7 +217,8 @@ export default function Profile() {
               name="twitter"
               autoComplete="twitter"
               autoFocus
-              //value={twitter}
+              disabled={!isCurrentUser}
+              defaultValue={twitter}
             />
             <TextField
               variant="outlined"
@@ -167,7 +229,8 @@ export default function Profile() {
               name="github"
               autoComplete="github"
               autoFocus
-              //value={github}
+              disabled={!isCurrentUser}
+              defaultValue={github}
             />
             <TextField
               variant="outlined"
@@ -178,7 +241,8 @@ export default function Profile() {
               name="dribbble"
               autoComplete="dribbble"
               autoFocus
-              //value={dribbble}
+              disabled={!isCurrentUser}
+              defaultValue={dribbble}
             />
             <TextField
               variant="outlined"
@@ -189,18 +253,22 @@ export default function Profile() {
               name="website"
               autoComplete="website"
               autoFocus
-              //value={website}
+              disabled={!isCurrentUser}
+              defaultValue={website}
             />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              //className={classes.submit}
-              //onClick={updateProfile}
-            >
-              Update Profile
-            </Button>
+            {isCurrentUser ? (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                //className={classes.submit}
+                onClick={() => updateProfile()}
+              >
+                Update Profile
+              </Button>
+            ) : (
+              <></>
+            )}
           </form>
         </Grid>
       </React.Fragment>
