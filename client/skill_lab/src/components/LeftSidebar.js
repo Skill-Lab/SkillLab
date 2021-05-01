@@ -20,28 +20,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-async function getUserSubspaces(user) {
-  const userSubspaces = [];
-
-  await db
-    .collection("userSubspace")
-    .where("user_id", "==", user.uid)
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.docs.forEach((doc) => {
-        // var subspace = {
-        //   id: doc.data().subspace_id,
-        //   name: doc.data().name,
-        //   imageURL: doc.data().imageURL,
-        // };
-        console.log("Subspace name: " + doc.data().subspace_name);
-        userSubspaces.push(doc.data().subspace_name);
-      });
-    });
-    console.log("User subspaces list: " + userSubspaces);
-  return userSubspaces;
-}
-
 export default function LeftSidebar() {
   const classes = useStyles();
 
@@ -49,10 +27,9 @@ export default function LeftSidebar() {
   const user = useSelector(selectUser);
 
   //Create state for data being retrieved from db
-  const [groups, setGroups] = useState([]);
   const [mentors, setMentors] = useState([]);
 
-  //Call useEffect to run when componenet mounted for Mentors
+  //Call useEffect to run when component mounted for Mentors
   useEffect(() => {
     //Retrieving a specific user data from the collection called "users"
     //Using their user.uid to select specific user
@@ -77,14 +54,6 @@ export default function LeftSidebar() {
     setMentors(mentorList);
   }, [user]);
 
-  //Call useEffect to run when componenet mounted for Groups
-  useEffect(() => {
-    getUserSubspaces(user).then((data) => {
-      console.log("Data from LS " + data[0])
-      setGroups(data);
-    });
-  }, [user]);
-
   return (
     <div>
       <Drawer
@@ -95,10 +64,8 @@ export default function LeftSidebar() {
         }}
       >
         <Toolbar />
-        <Divider />
         <div className={classes.drawerContainer}>
-          <Groups name="Groups" list={groups} />
-
+          <Groups />
           <Divider />
           <Mentors name="Mentors" list={mentors} />
         </div>

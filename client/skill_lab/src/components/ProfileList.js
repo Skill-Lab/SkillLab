@@ -7,10 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import { Redirect } from "react-router";
+import { useHistory } from "react-router";
 
-//Template Component
-//Do not use
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -21,13 +19,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//Direct to group subspace page
-const goToSubspace = (subspaceName) => {
-  <Redirect to={`/subspace/`} />;
-  console.log(subspaceName);
-};
-export default function SimpleAccordion({ name, list }) {
+export default function ProfileList({ name, list }) {
   const classes = useStyles();
+  const history = useHistory();
+
+  //Direct to group subspace page
+  const goToProfile = (profileID) => {
+    history.push({
+      pathname: `/userProfile/${profileID}`,
+    });
+  };
 
   return (
     <div className={classes.root}>
@@ -40,17 +41,17 @@ export default function SimpleAccordion({ name, list }) {
           <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
         {list.map((text) => (
-          <AccordionDetails>
+          <AccordionDetails key={text.id}>
             <ListItem
-              onClick={() => goToSubspace(text)}
-              value={text}
+              onClick={() => goToProfile(text.id)}
+              value={text.name}
               button
-              key={text}
+              key={text.id}
             >
               <ListItemIcon>
                 <AccountCircleIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={text.name} />
             </ListItem>
           </AccordionDetails>
         ))}

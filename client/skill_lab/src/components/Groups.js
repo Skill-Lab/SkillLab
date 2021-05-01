@@ -11,9 +11,9 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useHistory } from "react-router";
-
+import { useSelector } from "react-redux";
+import { selectGroups } from "../store/reducers/userSlice";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -24,9 +24,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Groups({ name, list }) {
+export default function Groups() {
   const classes = useStyles();
   const history = useHistory();
+  const subspaces = useSelector(selectGroups);
 
   //Direct to group subspace page
   const goToSubspace = (subspaceName) => {
@@ -34,6 +35,7 @@ export default function Groups({ name, list }) {
       pathname: `/subspace/${subspaceName}`,
     });
   };
+
   return (
     <div className={classes.root}>
       <Accordion>
@@ -42,20 +44,21 @@ export default function Groups({ name, list }) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>{name}</Typography>
+          <Typography className={classes.heading}>Groups</Typography>
+          {/* Retrieve subspaces from redux and render each item */}
         </AccordionSummary>
-        {list.map((text) => (
-          <AccordionDetails key={text}>
+        {subspaces.map((text) => (
+          <AccordionDetails key={text.id}>
             <ListItem
-              onClick={() => goToSubspace(text)}
-              value={text}
+              onClick={() => goToSubspace(text.name)}
+              value={text.name}
               button
-              key={text}
+              key={text.id}
             >
               <ListItemIcon>
-                <Avatar  />
+                <Avatar src={text.imageURL} />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={text.name} />
             </ListItem>
           </AccordionDetails>
         ))}

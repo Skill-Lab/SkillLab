@@ -11,8 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { auth, db } from "../../firebase";
 import { useDispatch } from "react-redux";
-import { login } from "../../store/reducers/userSlice";
+import { login, storeGroups } from "../../store/reducers/userSlice";
 import { useHistory } from "react-router-dom";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -84,21 +85,27 @@ export default function SignUp() {
                 email: userAuth.user.email,
                 uid: userAuth.user.uid,
                 displayName: firstName + " " + lastName,
-              })
+              }),
+              dispatch(
+                storeGroups({
+                  groups: [],
+                })
+              )
             );
-            history.push("/home");
-            db.collection('users').doc(userAuth.user.uid).set({
+            db.collection("users").doc(userAuth.user.uid).set({
               firstName: firstName,
               lastName: lastName,
               email: userAuth.user.email,
               posts: [],
               comments: [],
               mentors: [],
-              groups: []
-
+              groups: [],
             });
+          })
+          .then(() => {
+            history.push("/home");
           });
-      }) 
+      })
       .catch((error) => alert(error.message));
   };
   return (

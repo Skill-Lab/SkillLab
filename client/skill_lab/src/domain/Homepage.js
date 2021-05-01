@@ -5,12 +5,17 @@ import {
   CardActions,
   CssBaseline,
   Grid,
+  InputLabel,
   Fab,
+  FormControl,
   IconButton,
   makeStyles,
+  MenuItem,
+  Select,
   TextField,
   Toolbar,
   Button,
+  CircularProgress,
 } from "@material-ui/core";
 import CreateIcon from "@material-ui/icons/Create";
 import CloseIcon from "@material-ui/icons/Close";
@@ -22,7 +27,8 @@ import { Redirect } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
 import Post from "../components/Feed/Post";
 // import { auth } from "../firebase";
-import { selectUser } from "../store/reducers/userSlice";
+import { selectGroups, selectUser } from "../store/reducers/userSlice";
+import { db } from "../firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
   postCreationCard: {
     width: "32rem",
   },
+  subspaceFormControl: {
+    marginBottom: theme.spacing(2),
+    width: "100%",
+  },
 }));
 
 function createPosts(pd) {
@@ -55,6 +65,8 @@ function createPosts(pd) {
           name={post.name}
           timestamp={post.timestamp}
           message={post.message}
+          kudosCount={post.kudosCount}
+          kudosGiven={post.kudosGiven}
           commentsData={post.commentsData}
         />
       </Box>
@@ -68,6 +80,7 @@ export default function Homepage() {
   // const dispatch = useDispatch();
   // const history = useHistory();
   const user = useSelector(selectUser);
+  const subspaces = useSelector(selectGroups);
   const { DateTime } = require("luxon");
 
   var postsData = [
@@ -81,6 +94,8 @@ export default function Homepage() {
         reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
         pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
         culpa qui officia deserunt mollit anim id est laborum.`,
+      kudosCount: 8,
+      kudosGiven: false,
       commentsData: [
         {
           name: "Cindy Carrillo",
@@ -109,6 +124,8 @@ export default function Homepage() {
       name: "Alexis Huerta",
       timestamp: DateTime.now(),
       message: `This is a shorter post message.`,
+      kudosCount: 108,
+      kudosGiven: false,
       commentsData: [
         {
           name: "Cindy Carrillo",
@@ -131,30 +148,61 @@ export default function Homepage() {
   const [open, setOpen] = React.useState(false);
   const [posts, setPosts] = React.useState(createPosts(postsData));
   const [newPostMessage, setNewPostMessage] = React.useState("");
+  const [selectedSubspace, setSelectedSubspace] = React.useState("");
 
   const addNewPost = () => {
+    if (selectedSubspace === "") {
+      alert("Select a subspace");
+    }
     if (newPostMessage.trim() !== "") {
       // creating newPost is necessary for the key
       const newPost = {
         name: user.displayName,
         timestamp: DateTime.now().toString(),
         message: newPostMessage,
+        kudosCount: 0,
+        kudosGiven: false,
+        subspace_id: "subspace/" + selectedSubspace,
         commentsData: [],
       };
-      setPosts([
-        <Box key={JSON.stringify(newPost)} width="100%">
-          <Post
-            name={newPost.name}
-            timestamp={newPost.timestamp}
-            message={newPost.message}
-            commentsData={newPost.commentsData}
-          />
-        </Box>,
-        ...posts,
-      ]);
+      // Add a new post to DB with a generated id.
+      db.collection("posts")
+        .add(newPost)
+        .then((docRef) => {
+          console.log("Added post: Document written with ID: ", docRef.id);
+          newPost.post_id = docRef.id;
+        })
+        .then(() => {
+          console.log("New post id: ", newPost.post_id);
+          setPosts([
+            <Box key={JSON.stringify(newPost)} width="100%">
+              <Post
+                name={newPost.name}
+                timestamp={newPost.timestamp}
+                message={newPost.message}
+                kudosCount={newPost.kudosCount}
+                kudosGiven={newPost.kudosGiven}
+                commentsData={newPost.commentsData}
+                post_id={"posts/" + newPost.post_id}
+              />
+            </Box>,
+            ...posts,
+          ]);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+
       setNewPostMessage("");
+      setSelectedSubspace("");
+      setOpen(false);
     }
+  };
+
+  const cancelNewPost = () => {
     setOpen(false);
+    setSelectedSubspace("AI");
+    setNewPostMessage("");
   };
 
   //Retrieve User
@@ -169,70 +217,94 @@ export default function Homepage() {
       addNewPost();
       event.preventDefault();
     }
+    if (event.key === "Escape") cancelNewPost();
   }
 
   return (
     <div className={classes.root}>
-      <LeftSidebar />
-      <CssBaseline />
-      <Box mx="auto" p={2}>
-        <Toolbar />
-        <>{posts}</>
-      </Box>
-      <Fab
-        variant="extended"
-        className={classes.fab}
-        onClick={() => setOpen(true)}
-      >
-        <CreateIcon className={classes.extendedIcon} />
-        New Post
-      </Fab>
-      <Backdrop className={classes.backdrop} open={open}>
-        <Card className={classes.postCreationCard}>
-          <Box pb={2}>
-            <CardActions>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <IconButton onClick={() => setOpen(false)}>
-                    <CloseIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item xs={12}>
-                  <Box p={1}>
-                    <TextField
-                      multiline
-                      rows={5}
-                      fullWidth
-                      placeholder="What's on your mind?"
-                      variant="filled"
-                      value={newPostMessage}
-                      onChange={(event) =>
-                        setNewPostMessage(event.target.value)
-                      }
-                      onKeyPress={(event) => handleKeyPress(event)}
-                      inputRef={(input) => input && input.focus()}
-                    ></TextField>
-                  </Box>
-                </Grid>
-                <Grid item container justify="center" spacing={3}>
-                  <Grid item>
-                    <Button onClick={() => setOpen(false)}>Cancel</Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={addNewPost}
-                    >
-                      Post
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </CardActions>
+      {!subspaces ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <LeftSidebar />
+          <CssBaseline />
+          <Box mx="auto" p={2}>
+            <Toolbar />
+            <>{posts}</>
           </Box>
-        </Card>
-      </Backdrop>
+          <Fab
+            variant="extended"
+            className={classes.fab}
+            onClick={() => setOpen(true)}
+          >
+            <CreateIcon className={classes.extendedIcon} />
+            New Post
+          </Fab>
+          <Backdrop className={classes.backdrop} open={open}>
+            <Card className={classes.postCreationCard}>
+              <Box pb={2}>
+                <CardActions>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <IconButton onClick={() => setOpen(false)}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Box p={1}>
+                        <FormControl className={classes.subspaceFormControl}>
+                          <InputLabel>Subspace</InputLabel>
+                          {/* <Select
+                        value={selectedSubspace}
+                        onChange={(event) => {
+                          setSelectedSubspace(event.target.value);
+                          console.log(event.target.value);
+                          console.log(selectedSubspace);
+                        }}
+                      >
+                        {subspaces.map((subspace) => (
+                          <MenuItem value={subspace.id} key={subspace.id}>
+                            {subspace.name}
+                          </MenuItem>
+                        ))}
+                      </Select> */}
+                        </FormControl>
+                        <TextField
+                          multiline
+                          rows={5}
+                          fullWidth
+                          placeholder="What's on your mind?"
+                          variant="filled"
+                          value={newPostMessage}
+                          onChange={(event) =>
+                            setNewPostMessage(event.target.value)
+                          }
+                          onKeyPress={(event) => handleKeyPress(event)}
+                          inputRef={(input) => input && input.focus()}
+                        ></TextField>
+                      </Box>
+                    </Grid>
+                    <Grid item container justify="center" spacing={3}>
+                      <Grid item>
+                        <Button onClick={cancelNewPost}>Cancel</Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={addNewPost}
+                        >
+                          Post
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </CardActions>
+              </Box>
+            </Card>
+          </Backdrop>{" "}
+        </>
+      )}
     </div>
   );
 }
