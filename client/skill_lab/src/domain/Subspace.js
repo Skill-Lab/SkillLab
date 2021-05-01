@@ -154,6 +154,7 @@ export default function Subspace() {
               "==",
               "subspace/" + subspaceName.toLowerCase()
             )
+            .orderBy("timestamp")
             .get()
             .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
@@ -192,7 +193,8 @@ export default function Subspace() {
                 postsData.push(newPost);
               });
               console.log("Reading doc ID ", doc.id);
-              setPosts(createPosts(postsData));
+              var orderedPostsData = postsData.reverse();
+              setPosts(createPosts(orderedPostsData));
               setLoading(false);
             })
             .catch((error) => {
