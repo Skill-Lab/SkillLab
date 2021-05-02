@@ -254,20 +254,20 @@ export default function Homepage() {
                       <Box p={1}>
                         <FormControl className={classes.subspaceFormControl}>
                           <InputLabel>Subspace</InputLabel>
-                          {/* <Select
-                        value={selectedSubspace}
-                        onChange={(event) => {
-                          setSelectedSubspace(event.target.value);
-                          console.log(event.target.value);
-                          console.log(selectedSubspace);
-                        }}
-                      >
-                        {subspaces.map((subspace) => (
-                          <MenuItem value={subspace.id} key={subspace.id}>
-                            {subspace.name}
-                          </MenuItem>
-                        ))}
-                      </Select> */}
+                          <Select
+                            value={selectedSubspace}
+                            onChange={(event) => {
+                              setSelectedSubspace(event.target.value);
+                              console.log(event.target.value);
+                              console.log(selectedSubspace);
+                            }}
+                          >
+                            {subspaces.map((subspace) => (
+                              <MenuItem value={subspace.id} key={subspace.id}>
+                                {subspace.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
                         </FormControl>
                         <TextField
                           multiline
