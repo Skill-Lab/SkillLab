@@ -154,7 +154,7 @@ export default function Subspace() {
               "==",
               "subspace/" + subspaceName.toLowerCase()
             )
-            .orderBy("timestamp")
+            .orderBy("timestamp", "desc")
             .get()
             .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
@@ -170,7 +170,7 @@ export default function Subspace() {
 
                 db.collection("comments")
                   .where("post_id", "==", "posts/" + doc.id)
-                  .orderBy("timestamp")
+                  .orderBy("timestamp", "desc")
                   .get()
                   .then((querySnapshot) => {
                     querySnapshot.forEach((doc1) => {
@@ -186,8 +186,6 @@ export default function Subspace() {
                       newPost.commentsData.push(newComment);
                       console.log("Reading doc ID ", doc1.data().message);
                     });
-                    var orderedComments = newPost.commentsData.reverse();
-                    newPost.commentsData = orderedComments;
                     setPosts(createPosts(postsData));
                   })
                   .catch((error) => {
@@ -196,8 +194,7 @@ export default function Subspace() {
                 postsData.push(newPost);
               });
               console.log("Reading doc ID ", doc.id);
-              var orderedPostsData = postsData.reverse();
-              setPosts(createPosts(orderedPostsData));
+              setPosts(createPosts(postsData));
               setLoading(false);
             })
             .catch((error) => {
