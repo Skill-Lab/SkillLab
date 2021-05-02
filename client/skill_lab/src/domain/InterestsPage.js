@@ -140,6 +140,31 @@ export default function InterestPage() {
     // TODO: post this data to the database and create a new group from the data
     // Also add the user as a member of this group
     console.log(newSubspaceName, newSubspaceDesc, newSubspaceImgUrl);
+    // Add a new group to DB 
+    db.collection("subspace")
+      .doc(newSubspaceName.toLowerCase())
+      .set({
+        name: newSubspaceName,
+        description: newSubspaceDesc,
+        imageURL: newSubspaceImgUrl,
+      })
+      .then(() => {
+        setGroups([
+          <Grid key={newSubspaceName} item xs={3}>
+            <GroupCard
+              id={newSubspaceName}
+              name={newSubspaceName}
+              description={newSubspaceDesc}
+              isJoined={false}
+              imageURL={newSubspaceImgUrl}
+            />
+          </Grid>,
+          ...groups,
+        ]);
+      })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+      });
     closeSubspaceCreationCard();
   };
 
