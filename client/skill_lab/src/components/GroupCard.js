@@ -14,6 +14,7 @@ import { selectUser, addGroup, leaveGroup } from "../store/reducers/userSlice";
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
+    height: 278,
   },
   media: {
     height: 140,
