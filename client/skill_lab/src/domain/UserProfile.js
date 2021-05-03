@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Avatar,
@@ -87,11 +87,11 @@ export default function Profile() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [twitter, setTwitter] = useState("");
-  const [github, setGitHub] = useState("");
-  const [dribbble, setDribbble] = useState("");
-  const [website, setWebsite] = useState("");
+  const [linkedin] = useState("");
+  const [twitter] = useState("");
+  const [github] = useState("");
+  const [dribbble] = useState("");
+  const [website] = useState("");
 
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
@@ -194,7 +194,6 @@ export default function Profile() {
               autoFocus
               defaultValue={email}
               disabled={!isCurrentUser}
-              
             />
             <TextField
               variant="outlined"

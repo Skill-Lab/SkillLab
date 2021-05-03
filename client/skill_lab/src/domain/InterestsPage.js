@@ -7,8 +7,6 @@ import {
   IconButton,
   Backdrop,
   Box,
-  FormControl,
-  InputLabel,
   TextField,
   Button,
 } from "@material-ui/core";
@@ -101,6 +99,20 @@ async function getSubspaces(userSubspaces) {
   return subspaces;
 }
 
+async function getSubspacesNames() {
+  const subspacesNames = [];
+
+  await db
+    .collection("subspace")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.docs.forEach((doc) => {
+        subspacesNames.push(doc.data().name.toLowerCase());
+      });
+    });
+  return subspacesNames;
+}
+
 function createGroups(groupsData) {
   let groups = groupsData.map((group) => {
     return (
@@ -131,16 +143,50 @@ export default function InterestPage() {
 
   const closeSubspaceCreationCard = () => {
     setOpen(false);
+  };
+  const clearFields = () => {
     setNewSubspaceName("");
     setNewSubspaceDesc("");
     setNewSubspaceImgUrl("");
   };
-
   const createNewSubspace = () => {
-    // TODO: post this data to the database and create a new group from the data
-    // Also add the user as a member of this group
-    console.log(newSubspaceName, newSubspaceDesc, newSubspaceImgUrl);
-    closeSubspaceCreationCard();
+    getSubspacesNames().then((data) => {
+      //Check if subspaces already exists
+      if (data.includes(newSubspaceName.toLowerCase())) {
+        alert("Subspaces already exists");
+      } else if (newSubspaceName.trim() === "") {
+        alert("Please enter Subspace Name");
+      } else {
+        console.log("Subspaces does not exists");
+        // Add a new group to DB
+        db.collection("subspace")
+          .doc(newSubspaceName.toLowerCase())
+          .set({
+            name: newSubspaceName,
+            description: newSubspaceDesc,
+            imageURL: newSubspaceImgUrl,
+          })
+          .then(() => {
+            setGroups([
+              <Grid key={newSubspaceName} item xs={3}>
+                <GroupCard
+                  id={newSubspaceName}
+                  name={newSubspaceName}
+                  description={newSubspaceDesc}
+                  isJoined={false}
+                  imageURL={newSubspaceImgUrl}
+                />
+              </Grid>,
+              ...groups,
+            ]);
+          })
+          .catch((error) => {
+            console.error("Error adding document: ", error);
+          });
+        closeSubspaceCreationCard();
+      }
+    });
+    clearFields();
   };
 
   useEffect(() => {

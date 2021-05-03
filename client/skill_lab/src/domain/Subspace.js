@@ -214,7 +214,7 @@ export default function Subspace() {
       .catch((error) => {
         console.log("Error getting document:", error);
       });
-  }, [subspaceName]);
+  }, [subspaceName]); //Do not add any other dependancy, it will create infinite network requests
 
   //Render group memebers from db
   useEffect(() => {
