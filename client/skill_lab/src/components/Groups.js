@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
   Avatar,
+  CircularProgress,
   ListItem,
   ListItemIcon,
   ListItemText,
@@ -38,31 +39,37 @@ export default function Groups() {
 
   return (
     <div className={classes.root}>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography className={classes.heading}>Groups</Typography>
-          {/* Retrieve subspaces from redux and render each item */}
-        </AccordionSummary>
-        {subspaces.map((text) => (
-          <AccordionDetails key={text.id}>
-            <ListItem
-              onClick={() => goToSubspace(text.name)}
-              value={text.name}
-              button
-              key={text.id}
+      {!subspaces ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
             >
-              <ListItemIcon>
-                <Avatar src={text.imageURL} />
-              </ListItemIcon>
-              <ListItemText primary={text.name} />
-            </ListItem>
-          </AccordionDetails>
-        ))}
-      </Accordion>
+              <Typography className={classes.heading}>Groups</Typography>
+              {/* Retrieve subspaces from redux and render each item */}
+            </AccordionSummary>
+            {subspaces.map((text) => (
+              <AccordionDetails key={text.id}>
+                <ListItem
+                  onClick={() => goToSubspace(text.name)}
+                  value={text.name}
+                  button
+                  key={text.id}
+                >
+                  <ListItemIcon>
+                    <Avatar src={text.imageURL} />
+                  </ListItemIcon>
+                  <ListItemText primary={text.name} />
+                </ListItem>
+              </AccordionDetails>
+            ))}
+          </Accordion>
+        </>
+      )}
     </div>
   );
 }
