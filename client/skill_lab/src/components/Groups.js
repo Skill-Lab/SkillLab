@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -13,8 +13,13 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
-import { selectGroups } from "../store/reducers/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectGroups,
+  selectUser,
+  storeGroups,
+} from "../store/reducers/userSlice";
+import { getUserSubspaces } from "../domain/Authentication/Login";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -29,6 +34,8 @@ export default function Groups() {
   const classes = useStyles();
   const history = useHistory();
   const subspaces = useSelector(selectGroups);
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
 
   //Direct to group subspace page
   const goToSubspace = (subspaceName) => {
@@ -36,6 +43,18 @@ export default function Groups() {
       pathname: `/subspace/${subspaceName}`,
     });
   };
+
+  useEffect(() => {
+    getUserSubspaces(user.uid).then((data) => {
+      console.log("REDUX after login " + data[0]);
+      //Store groups to redux
+      dispatch(
+        storeGroups({
+          groups: data,
+        })
+      );
+    });
+  }, [dispatch, user.uid]);
 
   return (
     <div className={classes.root}>
