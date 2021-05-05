@@ -21,7 +21,7 @@ import CreateIcon from "@material-ui/icons/Create";
 import CloseIcon from "@material-ui/icons/Close";
 import { deepOrange } from "@material-ui/core/colors";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import LeftSidebar from "../components/LeftSidebar";
@@ -81,69 +81,142 @@ export default function Homepage() {
   // const history = useHistory();
   const user = useSelector(selectUser);
   const subspaces = useSelector(selectGroups);
+
+  const [loading, setLoading] = useState(true);
+
   const { DateTime } = require("luxon");
 
-  var postsData = [
-    {
-      name: "Brian Tao",
-      timestamp: DateTime.now(),
-      message: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-        ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-        aliquip ex ea commodo consequat. Duis aute irure dolor in
-        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-        culpa qui officia deserunt mollit anim id est laborum.`,
-      kudosCount: 8,
-      kudosGiven: false,
-      commentsData: [
-        {
-          name: "Cindy Carrillo",
-          message: "This is the first comment",
-          timestamp: "2020-05-15T08:30:10",
-          kudosCount: 8,
-          kudosGiven: false,
-        },
-        {
-          name: "Nathan Abegaz",
-          message: "This is the second comment",
-          timestamp: "2021-02-11T11:33:30",
-          kudosCount: 79,
-          kudosGiven: false,
-        },
-        {
-          name: "Alexis Huerta",
-          message: "This is the third comment",
-          timestamp: "2021-01-09T15:01:12",
-          kudosCount: 301,
-          kudosGiven: true,
-        },
-      ],
-    },
-    {
-      name: "Alexis Huerta",
-      timestamp: DateTime.now(),
-      message: `This is a shorter post message.`,
-      kudosCount: 108,
-      kudosGiven: false,
-      commentsData: [
-        {
-          name: "Cindy Carrillo",
-          message: "This is the first comment",
-          timestamp: "2020-05-15T08:30:10",
-          kudosCount: 8,
-          kudosGiven: false,
-        },
-        {
-          name: "Nathan Abegaz",
-          message: "This is the second comment",
-          timestamp: "2021-02-11T11:33:30",
-          kudosCount: 79,
-          kudosGiven: false,
-        },
-      ],
-    },
-  ];
+  var postsData = [];
+  // var postsData = [
+  //   {
+  //     name: "Brian Tao",
+  //     timestamp: DateTime.now(),
+  //     message: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+  //       eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+  //       ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+  //       aliquip ex ea commodo consequat. Duis aute irure dolor in
+  //       reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+  //       pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+  //       culpa qui officia deserunt mollit anim id est laborum.`,
+  //     kudosCount: 8,
+  //     kudosGiven: false,
+  //     commentsData: [
+  //       {
+  //         name: "Cindy Carrillo",
+  //         message: "This is the first comment",
+  //         timestamp: "2020-05-15T08:30:10",
+  //         kudosCount: 8,
+  //         kudosGiven: false,
+  //       },
+  //       {
+  //         name: "Nathan Abegaz",
+  //         message: "This is the second comment",
+  //         timestamp: "2021-02-11T11:33:30",
+  //         kudosCount: 79,
+  //         kudosGiven: false,
+  //       },
+  //       {
+  //         name: "Alexis Huerta",
+  //         message: "This is the third comment",
+  //         timestamp: "2021-01-09T15:01:12",
+  //         kudosCount: 301,
+  //         kudosGiven: true,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     name: "Alexis Huerta",
+  //     timestamp: DateTime.now(),
+  //     message: `This is a shorter post message.`,
+  //     kudosCount: 108,
+  //     kudosGiven: false,
+  //     commentsData: [
+  //       {
+  //         name: "Cindy Carrillo",
+  //         message: "This is the first comment",
+  //         timestamp: "2020-05-15T08:30:10",
+  //         kudosCount: 8,
+  //         kudosGiven: false,
+  //       },
+  //       {
+  //         name: "Nathan Abegaz",
+  //         message: "This is the second comment",
+  //         timestamp: "2021-02-11T11:33:30",
+  //         kudosCount: 79,
+  //         kudosGiven: false,
+  //       },
+  //     ],
+  //   },
+  // ];
+
+  useEffect(() => {
+    setLoading(true);
+
+    if (subspaces === undefined || subspaces.length == 0) {
+      console.log("empty");
+      setLoading(true);
+    } else {
+      var subspaceIds = subspaces.map((subspace) => {
+        return "subspace/" + subspace.id;
+      });
+
+      console.log(subspaceIds);
+
+      db.collection("posts")
+        .where("subspace_id", "in", subspaceIds)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            var newPost = {
+              name: doc.data().name,
+              timestamp: doc.data().timestamp,
+              message: doc.data().message,
+              post_id: doc.id,
+              kudosCount: doc.data().kudosCount,
+              kudosGiven: doc.data().kudosGiven,
+              commentsData: [],
+            };
+
+            db.collection("comments")
+              .where("post_id", "==", "posts/" + doc.id)
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((doc1) => {
+                  var newComment = {
+                    name: doc1.data().name,
+                    timestamp: doc1.data().timestamp,
+                    message: doc1.data().message,
+                    post_id: doc1.data().post_id,
+                    kudosCount: doc1.data().kudosCount,
+                    kudosGiven: doc1.data().kudosGiven,
+                    comment_id: "comments/" + doc1.id,
+                  };
+                  newPost.commentsData.push(newComment);
+                  console.log("Reading doc message", doc1.data().message);
+                });
+                setPosts(createPosts(postsData));
+              })
+              .catch((error) => {
+                console.log("Error getting documents: ", error);
+              });
+            postsData.push(newPost);
+          });
+          // console.log("Reading doc ID ", doc.id);
+          setPosts(createPosts(postsData));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+          setLoading(false);
+        });
+
+      setLoading(false);
+
+      console.log(postsData);
+    }
+  }, [subspaces]);
+
+  //------------------------------------
 
   const [open, setOpen] = React.useState(false);
   const [posts, setPosts] = React.useState(createPosts(postsData));
@@ -222,15 +295,18 @@ export default function Homepage() {
 
   return (
     <div className={classes.root}>
-      {!subspaces ? (
-        <CircularProgress />
+      {loading ? (
+        <>
+          <CircularProgress />
+        </>
       ) : (
         <>
           <LeftSidebar />
           <CssBaseline />
           <Box mx="auto" p={2}>
             <Toolbar />
-            <>{posts}</>
+            {/* {loading ? <CircularProgress /> : <>{posts}</>} */}
+            {posts}
           </Box>
           <Fab
             variant="extended"
