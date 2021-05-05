@@ -19,11 +19,15 @@ import CreateIcon from "@material-ui/icons/Create";
 import CloseIcon from "@material-ui/icons/Close";
 import { deepOrange } from "@material-ui/core/colors";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LeftSidebar from "../components/LeftSidebar";
 import RightSidebar from "../components/RightSidebar";
 import { db } from "../firebase";
-import { selectUser } from "../store/reducers/userSlice";
+import {
+  selectUser,
+  storeSubspaceMembers,
+  storeSubspaceMentors,
+} from "../store/reducers/userSlice";
 import Post from "../components/Feed/Post";
 import { DateTime } from "luxon";
 
@@ -73,13 +77,13 @@ function createPosts(pd) {
 export default function Subspace() {
   const classes = useStyles();
   var { subspaceName } = useParams();
+  const [doc_id, setDoc_id] = useState("");
+  const dispatch = useDispatch();
 
   var postsData = [];
 
   const [members, setMembers] = useState([]);
-  // const [description, setDescription] = useState(
-  //   createSampleDescription(subspaceName, sampleMembers.length)
-  // );
+  const [subspaceMentors, setSubspaceMentors] = useState([]);
   const [description, setDescription] = useState();
 
   const [loading, setLoading] = useState(true);
@@ -219,6 +223,7 @@ export default function Subspace() {
   //Render group memebers from db
   useEffect(() => {
     const groupMemberList = [];
+    const subspaceMentors = [];
 
     //Retreive collection userSubspace
     db.collection("userSubspace")
@@ -232,18 +237,29 @@ export default function Subspace() {
           var member = {
             id: doc.data().user_id,
             name: doc.data().user_name,
+            isMentor: doc.data().isMentor,
+            doc_id: doc.id,
           };
-          //Add member to list
 
-          //TODO: add memeber as object instead of string array
+          //Add mentor to list
+          if (member.isMentor === true) {
+            subspaceMentors.push(member);
+          }
+
+          //Save doc id for current user in curent subspace
+          if (member.id === user.uid) {
+            setDoc_id(doc.id);
+          }
           groupMemberList.push(member);
         });
-        console.log("I have entedred to ");
+        dispatch(storeSubspaceMentors(subspaceMentors));
+        console.log("Current Mentors  " + JSON.stringify(subspaceMentors));
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
     setMembers(groupMemberList);
+    setSubspaceMentors(subspaceMentors);
   }, [subspaceName]);
 
   //Retrieve User
@@ -265,8 +281,12 @@ export default function Subspace() {
         <h1>{subspaceName}</h1>
         {loading ? <CircularProgress /> : <>{posts}</>}
       </Box>
-      {/* Right now the members are sample data bc database doesn't have members for subspaces, it seems */}
-      <RightSidebar description={description} members={members} />
+
+      <RightSidebar
+        description={description}
+        members={members}
+        doc_id={doc_id}
+      />
       <Fab
         variant="extended"
         className={classes.fab}

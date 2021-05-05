@@ -5,6 +5,7 @@ export const userSlice = createSlice({
   initialState: {
     user: null,
     groups: [],
+    subspaceMentors: [],
   },
   reducers: {
     login: (state, action) => {
@@ -18,18 +19,41 @@ export const userSlice = createSlice({
       state.groups = action.payload;
     },
     addGroup: (state, action) => {
-      state.groups.groups = [...state.groups.groups, action.payload];  
+      state.groups.groups = [...state.groups.groups, action.payload];
     },
-    leaveGroup: (state,action) => {
-      state.groups.groups = state.groups.groups.filter(group => group.id !== action.payload)
-    }
+    leaveGroup: (state, action) => {
+      state.groups.groups = state.groups.groups.filter(
+        (group) => group.id !== action.payload
+      );
+    },
+    storeSubspaceMentors: (state, action) => {
+      state.subspaceMentors = action.payload;
+    },
+    addSubspaceMentor: (state, action) => {
+      state.subspaceMentors = [...state.subspaceMentors, action.payload];
+    },
+    removeSubspaceMentor: (state, action) => {
+      state.subspaceMentors = state.subspaceMentors.filter(
+        (mentor) => mentor.id !== action.payload.id
+      );
+    },
   },
 });
 
-export const { login, logout, storeGroups, addGroup, leaveGroup } = userSlice.actions;
+export const {
+  login,
+  logout,
+  storeGroups,
+  addGroup,
+  leaveGroup,
+  storeSubspaceMentors,
+  addSubspaceMentor,
+  removeSubspaceMentor,
+} = userSlice.actions;
 
 //Selectors
 export const selectUser = (state) => state.user.user;
 export const selectGroups = (state) => state.user.groups.groups;
+export const selectSubspaceMentors = (state) => state.user.subspaceMentors;
 
 export default userSlice.reducer;

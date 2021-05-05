@@ -5,7 +5,15 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import IconButton from "@material-ui/core/IconButton";
+
+import {
+  Button,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useHistory } from "react-router";
 
@@ -18,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightRegular,
   },
 }));
+
+function addMentor() {
+  console.log("Add mentor");
+}
 
 export default function ProfileList({ name, list }) {
   const classes = useStyles();
@@ -53,6 +65,14 @@ export default function ProfileList({ name, list }) {
               </ListItemIcon>
               <ListItemText primary={text.name} />
             </ListItem>
+            {name === "Mentors" ? (
+              <IconButton
+                onClick={() => addMentor()}
+                children={<AddIcon></AddIcon>}
+              ></IconButton>
+            ) : (
+              <></>
+            )}
           </AccordionDetails>
         ))}
       </Accordion>

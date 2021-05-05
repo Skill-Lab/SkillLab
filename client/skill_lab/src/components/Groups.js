@@ -62,7 +62,7 @@ export default function Groups() {
         <CircularProgress />
       ) : (
         <>
-          <Accordion>
+          <Accordion >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -72,7 +72,7 @@ export default function Groups() {
               {/* Retrieve subspaces from redux and render each item */}
             </AccordionSummary>
             {subspaces.map((text) => (
-              <AccordionDetails key={text.id}>
+              <AccordionDetails  key={text.id}>
                 <ListItem
                   onClick={() => goToSubspace(text.name)}
                   value={text.name}
