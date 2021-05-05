@@ -1,5 +1,5 @@
 import { Divider, Drawer, makeStyles, Toolbar } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ProfileList from "./ProfileList";
 import Switch from "@material-ui/core/Switch";
 
