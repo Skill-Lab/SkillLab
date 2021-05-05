@@ -45,6 +45,7 @@ export default function GroupCard({
       user_id: user.uid,
       user_name: user.displayName,
       imageURL: imageURL,
+      isMentor: false,
     };
 
     db.collection("userSubspace")
