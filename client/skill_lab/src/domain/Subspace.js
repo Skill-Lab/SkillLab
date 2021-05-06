@@ -23,11 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import LeftSidebar from "../components/LeftSidebar";
 import RightSidebar from "../components/RightSidebar";
 import { db } from "../firebase";
-import {
-  selectUser,
-  storeSubspaceMembers,
-  storeSubspaceMentors,
-} from "../store/reducers/userSlice";
+import { selectUser, storeSubspaceMentors } from "../store/reducers/userSlice";
 import Post from "../components/Feed/Post";
 import { DateTime } from "luxon";
 
@@ -260,7 +256,7 @@ export default function Subspace() {
       });
     setMembers(groupMemberList);
     setSubspaceMentors(subspaceMentors);
-  }, [subspaceName]);
+  }, [subspaceName]); //Do not add any other dependancy, it will create infinite network requests
 
   //Retrieve User
   const user = useSelector(selectUser);

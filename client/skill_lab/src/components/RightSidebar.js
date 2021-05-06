@@ -1,5 +1,5 @@
 import { Divider, Drawer, makeStyles, Toolbar } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ProfileList from "./ProfileList";
 import Switch from "@material-ui/core/Switch";
 
@@ -51,6 +51,21 @@ export default function RightSidebar({ description, members, doc_id }) {
 
   //Update status whether user is a mentor for current subpsace or not
   function updateSubspaceMentor(status) {
+    if (!status) {
+      dispatch(
+        addSubspaceMentor({
+          id: user.uid,
+          name: user.displayName,
+          isMentor: true,
+        })
+      );
+    } else {
+      dispatch(
+        removeSubspaceMentor({
+          id: user.uid,
+        })
+      );
+    }
     //Find user
     //Update
     var docRef = db.collection("userSubspace").doc(doc_id);
@@ -60,21 +75,7 @@ export default function RightSidebar({ description, members, doc_id }) {
       })
       .then(() => {
         console.log("Document successfully updated!");
-        if (!status) {
-          dispatch(
-            addSubspaceMentor({
-              id: user.uid,
-              name: user.displayName,
-              isMentor: true,
-            })
-          );
-        } else {
-          dispatch(
-            removeSubspaceMentor({
-              id: user.uid,
-            })
-          );
-        }
+        
       })
       .catch((error) => {
         // The document probably doesn't exist.

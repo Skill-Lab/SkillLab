@@ -11,7 +11,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { auth, db } from "../../firebase";
 import { useDispatch } from "react-redux";
-import { login, storeGroups } from "../../store/reducers/userSlice";
+import {
+  login,
+  storeGroups,
+  storeMentors,
+} from "../../store/reducers/userSlice";
 import { useHistory } from "react-router-dom";
 
 function Copyright() {
@@ -89,6 +93,9 @@ export default function SignUp() {
               dispatch(
                 storeGroups({
                   groups: [],
+                }),
+                storeMentors({
+                  mentors: [],
                 })
               )
             );
@@ -96,10 +103,6 @@ export default function SignUp() {
               firstName: firstName,
               lastName: lastName,
               email: userAuth.user.email,
-              posts: [],
-              comments: [],
-              mentors: [],
-              groups: [],
             });
           })
           .then(() => {
