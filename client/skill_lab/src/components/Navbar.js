@@ -40,40 +40,40 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  search: {
-    position: 'relative',
-    borderRadius: "7em",
-    borderColor: 'gray',
-    width: '20%',
-    backgroundColor: deepOrange[600],
-  },
+  // search: {
+  //   position: 'relative',
+  //   borderRadius: "7em",
+  //   borderColor: 'gray',
+  //   width: '20%',
+  //   backgroundColor: deepOrange[600],
+  // },
 
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'white',
-  },
-  inputRoot: {
-    color: 'white',
-  },
-  inputInput: {
-    padding: theme.spacing(2, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  },
+  // searchIcon: {
+  //   padding: theme.spacing(0, 2),
+  //   height: '100%',
+  //   position: 'absolute',
+  //   pointerEvents: 'none',
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   color: 'white',
+  // },
+  // inputRoot: {
+  //   color: 'white',
+  // },
+  // inputInput: {
+  //   padding: theme.spacing(2, 1, 1, 0),
+  //   // vertical padding + font size from searchIcon
+  //   paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+  //   transition: theme.transitions.create('width'),
+  //   width: '100%',
+  //   [theme.breakpoints.up('sm')]: {
+  //     width: '12ch',
+  //     '&:focus': {
+  //       width: '20ch',
+  //     },
+  //   },
+  // },
 
 }));
 
@@ -118,7 +118,7 @@ export default function Navbar() {
             <div className={classes.root}>
                   
               <div className={classes.rightButtons}>
-              <div className={classes.search}>
+              {/* <div className={classes.search}>
                 <div className={classes.searchIcon}>
                   <SearchIcon />
                 </div>
@@ -130,7 +130,7 @@ export default function Navbar() {
                   }}
                   inputProps={{ 'aria-label': 'search' }}
                 />
-              </div>
+              </div> */}
                 <Button href="/interestPage">Interests</Button>
                 <Button onClick={signout}>Logout</Button>
                 <IconButton
