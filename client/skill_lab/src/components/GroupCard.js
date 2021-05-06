@@ -38,7 +38,14 @@ export default function GroupCard({
 
   //Add group to db
   function addSubspace(id) {
-    //groupData.name.isJoined = tr
+    setJoinGroup(true);
+    dispatch(
+      addGroup({
+        id: id,
+        name: name,
+        imageURL: imageURL,
+      })
+    );
     var entry = {
       subspace_id: id,
       subspace_name: name,
@@ -52,19 +59,13 @@ export default function GroupCard({
       .add(entry)
       .then((docRef) => {
         console.log("Added Group to list" + docRef.id);
-        setJoinGroup(true);
-        dispatch(
-          addGroup({
-            id: id,
-            name: name,
-            imageURL: imageURL,
-          })
-        );
       });
   }
 
   //Delete group from db
   function leaveSubspace(id) {
+    setJoinGroup(false);
+    dispatch(leaveGroup(id));
     db.collection("userSubspace")
       .where("user_id", "==", user.uid)
       .get()
@@ -73,8 +74,6 @@ export default function GroupCard({
           if (doc.data().subspace_id === id) {
             doc.ref.delete();
             console.log("Successfully deleted group");
-            setJoinGroup(false);
-            dispatch(leaveGroup(id));
           }
         });
       });
