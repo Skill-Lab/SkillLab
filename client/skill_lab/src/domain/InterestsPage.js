@@ -17,6 +17,7 @@ import GroupCard from "../components/GroupCard";
 import { db } from "../firebase";
 import { useSelector } from "react-redux";
 import { selectUser } from "../store/reducers/userSlice";
+import SearchBar from "../components/SearchBar";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -58,6 +59,12 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
+  },
+  searchbar:{
+    display: "flex",
+    justifyContent: "center",
+    position: 'relative',
+    alignItems: 'center',
   },
 }));
 
@@ -215,6 +222,9 @@ export default function InterestPage() {
       <LeftSidebar />
       <div className={classes.title}></div>
       <div className={classes.content}>
+      <div className={classes.searchbar}>
+          <SearchBar/>
+        </div>
         <Grid container spacing={1}>
           {groups}
         </Grid>
