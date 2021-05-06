@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    fontWeight: theme.typography.fontWeightBold,
   },
 }));
 
@@ -76,9 +76,7 @@ export default function ProfileList({ name, list }) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>
-            <h4>{name}</h4>
-          </Typography>
+          <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
         {list.map((text) => (
           <AccordionDetails key={text.id}>
