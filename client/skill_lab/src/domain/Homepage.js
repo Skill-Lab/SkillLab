@@ -87,67 +87,6 @@ export default function Homepage() {
   const { DateTime } = require("luxon");
 
   var postsData = [];
-  // var postsData = [
-  //   {
-  //     name: "Brian Tao",
-  //     timestamp: DateTime.now(),
-  //     message: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-  //       eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-  //       ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-  //       aliquip ex ea commodo consequat. Duis aute irure dolor in
-  //       reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-  //       pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-  //       culpa qui officia deserunt mollit anim id est laborum.`,
-  //     kudosCount: 8,
-  //     kudosGiven: false,
-  //     commentsData: [
-  //       {
-  //         name: "Cindy Carrillo",
-  //         message: "This is the first comment",
-  //         timestamp: "2020-05-15T08:30:10",
-  //         kudosCount: 8,
-  //         kudosGiven: false,
-  //       },
-  //       {
-  //         name: "Nathan Abegaz",
-  //         message: "This is the second comment",
-  //         timestamp: "2021-02-11T11:33:30",
-  //         kudosCount: 79,
-  //         kudosGiven: false,
-  //       },
-  //       {
-  //         name: "Alexis Huerta",
-  //         message: "This is the third comment",
-  //         timestamp: "2021-01-09T15:01:12",
-  //         kudosCount: 301,
-  //         kudosGiven: true,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     name: "Alexis Huerta",
-  //     timestamp: DateTime.now(),
-  //     message: `This is a shorter post message.`,
-  //     kudosCount: 108,
-  //     kudosGiven: false,
-  //     commentsData: [
-  //       {
-  //         name: "Cindy Carrillo",
-  //         message: "This is the first comment",
-  //         timestamp: "2020-05-15T08:30:10",
-  //         kudosCount: 8,
-  //         kudosGiven: false,
-  //       },
-  //       {
-  //         name: "Nathan Abegaz",
-  //         message: "This is the second comment",
-  //         timestamp: "2021-02-11T11:33:30",
-  //         kudosCount: 79,
-  //         kudosGiven: false,
-  //       },
-  //     ],
-  //   },
-  // ];
 
   useEffect(() => {
     setLoading(true);
