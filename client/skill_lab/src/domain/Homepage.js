@@ -67,6 +67,7 @@ function createPosts(pd) {
           message={post.message}
           kudosCount={post.kudosCount}
           kudosGiven={post.kudosGiven}
+          post_id={post.post_id}
           commentsData={post.commentsData}
         />
       </Box>
@@ -97,8 +98,13 @@ export default function Homepage() {
     }
   };
 
-  var newSubspaces = [...subspaces];
-  shuffle(newSubspaces);
+  var newSubspaces;
+  if (!subspaces) {
+    newSubspaces = [];
+  } else {
+    newSubspaces = [...subspaces];
+    shuffle(newSubspaces);
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -133,6 +139,8 @@ export default function Homepage() {
               commentsData: [],
             };
 
+            // console.log("newPost :" + JSON.stringify(newPost));
+
             db.collection("comments")
               .where("post_id", "==", "posts/" + doc.id)
               .get()
@@ -148,7 +156,6 @@ export default function Homepage() {
                     comment_id: "comments/" + doc1.id,
                   };
                   newPost.commentsData.push(newComment);
-                  console.log("Reading doc message", doc1.data().message);
                 });
                 setPosts(createPosts(postsData));
               })
@@ -253,7 +260,7 @@ export default function Homepage() {
       <>
         <LeftSidebar />
         <CssBaseline />
-        {subspaces.length === 0 ? (
+        {newSubspaces.length === 0 ? (
           <>
             <Box mx="auto" p={2}>
               <Toolbar />
