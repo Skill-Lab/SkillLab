@@ -11,7 +11,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { auth, db } from "../../firebase";
 import { useDispatch } from "react-redux";
-import { login, storeGroups } from "../../store/reducers/userSlice";
+import {
+  login,
+  storeGroups,
+  storeMentors,
+} from "../../store/reducers/userSlice";
 import { useHistory } from "react-router-dom";
 
 function Copyright() {
@@ -71,6 +75,26 @@ export async function getUserSubspaces(uid) {
   console.log("User subspaces list: " + userSubspaces);
   return userSubspaces;
 }
+
+export async function getMentorList(uid) {
+  var mentorList = [];
+
+  await db
+    .collection("mentorRelation")
+    .where("mentee_id", "==", uid)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.docs.forEach((doc) => {
+        var mentor = {
+          id: doc.data().mentor_id,
+          name: doc.data().mentor_name,
+        };
+        mentorList.push(mentor);
+      });
+    });
+  return mentorList;
+}
+
 export default function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -103,6 +127,15 @@ export default function Login() {
           dispatch(
             storeGroups({
               groups: data,
+            })
+          );
+        });
+      })
+      .then(() => {
+        getMentorList(uid).then((data) => {
+          dispatch(
+            storeMentors({
+              mentors: data,
             })
           );
         });

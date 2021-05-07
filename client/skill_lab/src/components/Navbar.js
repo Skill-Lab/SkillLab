@@ -7,6 +7,7 @@ import { Redirect } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -37,15 +38,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+
 }));
 
 export default function Navbar() {
   //Retrieve User
   const user = useSelector(selectUser);
-
   const dispatch = useDispatch();
-
   const classes = useStyles();
+
   const icon_Logo = (
     <Avatar
       alt="Logo"
@@ -54,6 +55,7 @@ export default function Navbar() {
       className={classes.logo_size}
     />
   );
+
   //Handle logout function from firebase & redux
   const signout = () => {
     dispatch(logout);
@@ -77,16 +79,19 @@ export default function Navbar() {
           ) : (
             //User is logged in
             //Display interests, logout on navbar
-            <div className={classes.rightButtons}>
-              <Button href="/interestPage">Interests</Button>
-              <Button onClick={signout}>Logout</Button>
-              <IconButton
-                href={`/userProfile/${user.uid}`}
+            <div className={classes.root}>
+                  
+              <div className={classes.rightButtons}>
+                <Button href="/interestPage">Interests</Button>
+                <Button onClick={signout}>Logout</Button>
+                <IconButton
+                  href={`/userProfile/${user.uid}`}
                 //onClick={handleMenu}
-              >
-                <AccountCircle />
-              </IconButton>
-            </div>
+                >
+                  <AccountCircle />
+                </IconButton>
+              </div>
+          </div>
           )}
         </Toolbar>
       </AppBar>
