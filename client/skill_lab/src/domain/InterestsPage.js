@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardActions,
@@ -9,6 +9,7 @@ import {
   Box,
   TextField,
   Button,
+  Fab,
 } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
@@ -17,7 +18,10 @@ import GroupCard from "../components/GroupCard";
 import { db } from "../firebase";
 import { useSelector } from "react-redux";
 import { selectUser } from "../store/reducers/userSlice";
+import CreateIcon from "@material-ui/icons/Create";
 import SearchBar from "../components/SearchBar";
+import { deepOrange } from "@material-ui/core/colors";
+import Fuse from "fuse.js";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -60,11 +64,18 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
   },
-  searchbar:{
+  searchbar: {
     display: "flex",
     justifyContent: "center",
-    position: 'relative',
-    alignItems: 'center',
+    position: "relative",
+    alignItems: "center",
+  },
+  fab: {
+    color: theme.palette.common.white,
+    backgroundColor: deepOrange[600],
+    position: "fixed",
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
   },
 }));
 
@@ -144,9 +155,19 @@ export default function InterestPage() {
   const [newSubspaceName, setNewSubspaceName] = React.useState("");
   const [newSubspaceDesc, setNewSubspaceDesc] = React.useState("");
   const [newSubspaceImgUrl, setNewSubspaceImgUrl] = React.useState("");
-
   //Retrieve user from redux
   const user = useSelector(selectUser);
+  const [groupsJSON, setGroupsJSON] = React.useState([]);
+  const [query, setQuery] = React.useState("");
+
+  const fuse = new Fuse(groupsJSON, {
+    keys: ["name"],
+  });
+  const results = fuse.search(query);
+  console.log("Results: " + JSON.stringify(results));
+  const matchedResults = query
+    ? results.map((result) => result.item)
+    : groupsJSON;
 
   const closeSubspaceCreationCard = () => {
     setOpen(false);
@@ -174,17 +195,15 @@ export default function InterestPage() {
             imageURL: newSubspaceImgUrl,
           })
           .then(() => {
-            setGroups([
-              <Grid key={newSubspaceName} item xs={3}>
-                <GroupCard
-                  id={newSubspaceName}
-                  name={newSubspaceName}
-                  description={newSubspaceDesc}
-                  isJoined={false}
-                  imageURL={newSubspaceImgUrl}
-                />
-              </Grid>,
-              ...groups,
+            setGroupsJSON([
+              {
+                id: newSubspaceName,
+                name: newSubspaceName,
+                description: newSubspaceDesc,
+                isJoined: false,
+                imageURL: newSubspaceImgUrl,
+              },
+              ...groupsJSON,
             ]);
           })
           .catch((error) => {
@@ -199,35 +218,36 @@ export default function InterestPage() {
   useEffect(() => {
     getUserSubspacesList(user).then((data) => {
       getSubspaces(data).then((data) => {
-        const groups = createGroups(data);
-        const createGroupCard = (
-          <Grid key="createGroupCard" item xs={3}>
-            <Card className={classes.card}>
-              <CardActions>
-                <IconButton onClick={() => setOpen(true)}>
-                  <AddCircleIcon className={classes.addButton} />
-                </IconButton>
-              </CardActions>
-              Create a New Group
-            </Card>
-          </Grid>
-        );
-        setGroups([...groups, createGroupCard]);
+        setGroupsJSON(data);
       });
     });
   }, [user, classes.card, classes.addButton]);
+  //const results = fuse.search("AI");
+  //console.log("Groups JSON: " + JSON.stringify(groupsJSON));
+  function handleOnSearch({ currentTarget = {} }) {
+    const { value } = currentTarget;
+    setQuery(value);
+  }
 
   return (
     <div>
       <LeftSidebar />
       <div className={classes.title}></div>
       <div className={classes.content}>
-      <div className={classes.searchbar}>
-          <SearchBar/>
+        <div className={classes.searchbar}>
+          <SearchBar value={query} onChange={handleOnSearch} />
         </div>
         <Grid container spacing={1}>
-          {groups}
+          {createGroups(matchedResults)}
         </Grid>
+        <Fab
+          variant="extended"
+          className={classes.fab}
+          onClick={() => setOpen(true)}
+        >
+          <CreateIcon className={classes.extendedIcon} />
+          New Group
+        </Fab>
         <Backdrop className={classes.backdrop} open={open}>
           <Card className={classes.createSubspaceCard}>
             <Box pb={2}>
