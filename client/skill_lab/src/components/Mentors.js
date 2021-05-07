@@ -45,7 +45,7 @@ export default function Mentors() {
   //Direct to user profile page
   const goToProfile = (mentorID) => {
     history.push({
-      pathname: `/userProfile/${mentorID}}`,
+      pathname: `/userProfile/${mentorID}`,
     });
   };
 
