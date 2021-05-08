@@ -10,6 +10,7 @@ import {
   TextField,
   Button,
   Fab,
+  CircularProgress,
 } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
@@ -65,6 +66,12 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
   searchbar: {
+    display: "flex",
+    justifyContent: "center",
+    position: "relative",
+    alignItems: "center",
+  },
+  loader: {
     display: "flex",
     justifyContent: "center",
     position: "relative",
@@ -160,6 +167,8 @@ export default function InterestPage() {
   const [groupsJSON, setGroupsJSON] = React.useState([]);
   const [query, setQuery] = React.useState("");
 
+  const [loading, setLoading] = useState(true);
+
   const fuse = new Fuse(groupsJSON, {
     keys: ["name"],
   });
@@ -216,9 +225,11 @@ export default function InterestPage() {
   };
 
   useEffect(() => {
+    setLoading(true);
     getUserSubspacesList(user).then((data) => {
       getSubspaces(data).then((data) => {
         setGroupsJSON(data);
+        setLoading(false);
       });
     });
   }, [user, classes.card, classes.addButton]);
@@ -234,88 +245,96 @@ export default function InterestPage() {
       <LeftSidebar />
       <div className={classes.title}></div>
       <div className={classes.content}>
-        <div className={classes.searchbar}>
-          <SearchBar value={query} onChange={handleOnSearch} />
-        </div>
-        <Grid container spacing={1}>
-          {createGroups(matchedResults)}
-        </Grid>
-        <Fab
-          variant="extended"
-          className={classes.fab}
-          onClick={() => setOpen(true)}
-        >
-          <CreateIcon className={classes.extendedIcon} />
-          New Group
-        </Fab>
-        <Backdrop className={classes.backdrop} open={open}>
-          <Card className={classes.createSubspaceCard}>
-            <Box pb={2}>
-              <CardActions>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <IconButton onClick={() => setOpen(false)}>
-                      <CloseIcon />
-                    </IconButton>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box p={1}>
-                      <TextField
-                        label="Subspace Name"
-                        fullWidth
-                        variant="filled"
-                        value={newSubspaceName}
-                        onChange={(event) =>
-                          setNewSubspaceName(event.target.value)
-                        }
-                      ></TextField>
-                    </Box>
-                    <Box p={1}>
-                      <TextField
-                        label="Subspace Description"
-                        multiline
-                        rows={5}
-                        fullWidth
-                        variant="filled"
-                        value={newSubspaceDesc}
-                        onChange={(event) =>
-                          setNewSubspaceDesc(event.target.value)
-                        }
-                      ></TextField>
-                    </Box>
-                    <Box p={1}>
-                      <TextField
-                        label="Link to Subspace Cover Image"
-                        fullWidth
-                        variant="filled"
-                        value={newSubspaceImgUrl}
-                        onChange={(event) =>
-                          setNewSubspaceImgUrl(event.target.value)
-                        }
-                      ></TextField>
-                    </Box>
-                  </Grid>
-                  <Grid item container justify="center" spacing={3}>
-                    <Grid item>
-                      <Button onClick={closeSubspaceCreationCard}>
-                        Cancel
-                      </Button>
+        {loading ? (
+          <div className={classes.loader}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <>
+            <div className={classes.searchbar}>
+              <SearchBar value={query} onChange={handleOnSearch} />
+            </div>
+            <Grid container spacing={1}>
+              {createGroups(matchedResults)}
+            </Grid>
+            <Fab
+              variant="extended"
+              className={classes.fab}
+              onClick={() => setOpen(true)}
+            >
+              <CreateIcon className={classes.extendedIcon} />
+              New Group
+            </Fab>
+            <Backdrop className={classes.backdrop} open={open}>
+              <Card className={classes.createSubspaceCard}>
+                <Box pb={2}>
+                  <CardActions>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <IconButton onClick={() => setOpen(false)}>
+                          <CloseIcon />
+                        </IconButton>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Box p={1}>
+                          <TextField
+                            label="Subspace Name"
+                            fullWidth
+                            variant="filled"
+                            value={newSubspaceName}
+                            onChange={(event) =>
+                              setNewSubspaceName(event.target.value)
+                            }
+                          ></TextField>
+                        </Box>
+                        <Box p={1}>
+                          <TextField
+                            label="Subspace Description"
+                            multiline
+                            rows={5}
+                            fullWidth
+                            variant="filled"
+                            value={newSubspaceDesc}
+                            onChange={(event) =>
+                              setNewSubspaceDesc(event.target.value)
+                            }
+                          ></TextField>
+                        </Box>
+                        <Box p={1}>
+                          <TextField
+                            label="Link to Subspace Cover Image"
+                            fullWidth
+                            variant="filled"
+                            value={newSubspaceImgUrl}
+                            onChange={(event) =>
+                              setNewSubspaceImgUrl(event.target.value)
+                            }
+                          ></TextField>
+                        </Box>
+                      </Grid>
+                      <Grid item container justify="center" spacing={3}>
+                        <Grid item>
+                          <Button onClick={closeSubspaceCreationCard}>
+                            Cancel
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={createNewSubspace}
+                          >
+                            Create
+                          </Button>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={createNewSubspace}
-                      >
-                        Create
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </CardActions>
-            </Box>
-          </Card>
-        </Backdrop>{" "}
+                  </CardActions>
+                </Box>
+              </Card>
+            </Backdrop>{" "}
+          </>
+        )}
       </div>
     </div>
   );

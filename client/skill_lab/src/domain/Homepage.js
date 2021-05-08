@@ -67,6 +67,7 @@ function createPosts(pd) {
           message={post.message}
           kudosCount={post.kudosCount}
           kudosGiven={post.kudosGiven}
+          post_id={post.post_id}
           commentsData={post.commentsData}
         />
       </Box>
@@ -88,6 +89,23 @@ export default function Homepage() {
 
   var postsData = [];
 
+  const shuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * i);
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+  };
+
+  var newSubspaces;
+  if (!subspaces) {
+    newSubspaces = [];
+  } else {
+    newSubspaces = [...subspaces];
+    shuffle(newSubspaces);
+  }
+
   useEffect(() => {
     setLoading(true);
 
@@ -95,14 +113,19 @@ export default function Homepage() {
       console.log("empty");
       setLoading(true);
     } else {
-      var subspaceIds = subspaces.map((subspace) => {
+      if (newSubspaces.length >= 10) {
+        newSubspaces = newSubspaces.slice(0, 10);
+      }
+
+      var subspaceIds = newSubspaces.map((subspace) => {
         return "subspace/" + subspace.id;
       });
 
-      console.log(subspaceIds);
+      console.log("SUBSPACE ID's: " + subspaceIds);
 
       db.collection("posts")
         .where("subspace_id", "in", subspaceIds)
+        .orderBy("timestamp", "desc")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
@@ -115,6 +138,8 @@ export default function Homepage() {
               kudosGiven: doc.data().kudosGiven,
               commentsData: [],
             };
+
+            // console.log("newPost :" + JSON.stringify(newPost));
 
             db.collection("comments")
               .where("post_id", "==", "posts/" + doc.id)
@@ -131,7 +156,6 @@ export default function Homepage() {
                     comment_id: "comments/" + doc1.id,
                   };
                   newPost.commentsData.push(newComment);
-                  console.log("Reading doc message", doc1.data().message);
                 });
                 setPosts(createPosts(postsData));
               })
@@ -148,8 +172,6 @@ export default function Homepage() {
           console.log("Error getting documents: ", error);
           setLoading(false);
         });
-
-      setLoading(false);
 
       console.log(postsData);
     }
@@ -235,91 +257,98 @@ export default function Homepage() {
 
   return (
     <div className={classes.root}>
-      {loading ? (
-        <>
-          <CircularProgress />
-        </>
-      ) : (
-        <>
-          <LeftSidebar />
-          <CssBaseline />
-          <Box mx="auto" p={2}>
-            <Toolbar />
-            {/* {loading ? <CircularProgress /> : <>{posts}</>} */}
-            {posts}
-          </Box>
-          <Fab
-            variant="extended"
-            className={classes.fab}
-            onClick={() => setOpen(true)}
-          >
-            <CreateIcon className={classes.extendedIcon} />
-            New Post
-          </Fab>
-          <Backdrop className={classes.backdrop} open={open}>
-            <Card className={classes.postCreationCard}>
-              <Box pb={2}>
-                <CardActions>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <IconButton onClick={() => setOpen(false)}>
-                        <CloseIcon />
-                      </IconButton>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Box p={1}>
-                        <FormControl className={classes.subspaceFormControl}>
-                          <InputLabel>Subspace</InputLabel>
-                          <Select
-                            value={selectedSubspace}
-                            onChange={(event) => {
-                              setSelectedSubspace(event.target.value);
-                              console.log(event.target.value);
-                              console.log(selectedSubspace);
-                            }}
+      <>
+        <LeftSidebar />
+        <CssBaseline />
+        {newSubspaces.length === 0 ? (
+          <>
+            <Box mx="auto" p={2}>
+              <Toolbar />
+              <h1>Select an Interest</h1>
+            </Box>
+          </>
+        ) : (
+          <>
+            <Box mx="auto" p={2}>
+              <Toolbar />
+              {loading ? <CircularProgress /> : <>{posts}</>}
+              {/* {!loading ? posts : <h1>Select an Interest</h1>} */}
+              {/* {posts} */}
+            </Box>
+            <Fab
+              variant="extended"
+              className={classes.fab}
+              onClick={() => setOpen(true)}
+            >
+              <CreateIcon className={classes.extendedIcon} />
+              New Post
+            </Fab>
+            <Backdrop className={classes.backdrop} open={open}>
+              <Card className={classes.postCreationCard}>
+                <Box pb={2}>
+                  <CardActions>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <IconButton onClick={() => setOpen(false)}>
+                          <CloseIcon />
+                        </IconButton>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Box p={1}>
+                          <FormControl className={classes.subspaceFormControl}>
+                            <InputLabel>Subspace</InputLabel>
+                            <Select
+                              value={selectedSubspace}
+                              onChange={(event) => {
+                                setSelectedSubspace(event.target.value);
+                                console.log(event.target.value);
+                                console.log(selectedSubspace);
+                              }}
+                            >
+                              {subspaces.map((subspace) => (
+                                <MenuItem value={subspace.id} key={subspace.id}>
+                                  {subspace.name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                          <TextField
+                            multiline
+                            rows={5}
+                            fullWidth
+                            placeholder="What's on your mind?"
+                            variant="filled"
+                            value={newPostMessage}
+                            onChange={(event) =>
+                              setNewPostMessage(event.target.value)
+                            }
+                            onKeyPress={(event) => handleKeyPress(event)}
+                            inputRef={(input) => input && input.focus()}
+                          ></TextField>
+                        </Box>
+                      </Grid>
+                      <Grid item container justify="center" spacing={3}>
+                        <Grid item>
+                          <Button onClick={cancelNewPost}>Cancel</Button>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={addNewPost}
                           >
-                            {subspaces.map((subspace) => (
-                              <MenuItem value={subspace.id} key={subspace.id}>
-                                {subspace.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        <TextField
-                          multiline
-                          rows={5}
-                          fullWidth
-                          placeholder="What's on your mind?"
-                          variant="filled"
-                          value={newPostMessage}
-                          onChange={(event) =>
-                            setNewPostMessage(event.target.value)
-                          }
-                          onKeyPress={(event) => handleKeyPress(event)}
-                          inputRef={(input) => input && input.focus()}
-                        ></TextField>
-                      </Box>
-                    </Grid>
-                    <Grid item container justify="center" spacing={3}>
-                      <Grid item>
-                        <Button onClick={cancelNewPost}>Cancel</Button>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={addNewPost}
-                        >
-                          Post
-                        </Button>
+                            Post
+                          </Button>
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                </CardActions>
-              </Box>
-            </Card>
-          </Backdrop>{" "}
-        </>
+                  </CardActions>
+                </Box>
+              </Card>
+            </Backdrop>{" "}
+          </>
+        )}
+      </>
       )}
     </div>
   );
