@@ -3,7 +3,7 @@
 Our project, Skill Lab, is an online learning and networking platform that aims to connect users over shared interests or skills. By providing a web application where users can ask and answer questions in interest-specific subspaces, and become mentors, Skill Lab offers necessary guidance and accountability for all. After successfully creating our vision for this project, we expect Skill Lab to bridge the gap between professionals, students, experts, and novices in an online community. 
 
 ## Code Structure
----
+
 Under the `client/skill_lab/src folder`, the code structure is broken down as follows:
 
 - `components`: This is where all the reusable components are stored 
@@ -14,7 +14,7 @@ Under the `client/skill_lab/src folder`, the code structure is broken down as fo
 - `index.js`: Root file that renders the entire app
 
 ## Setup and Build Instructions: 
----
+
 1. Go to the project code repository [link](https://github.com/Skill-Lab/SkillLab/)
 2. Open up the terminal and changed to a directory where you would like to place the project
 3. Type in `git clone https://github.com/Skill-Lab/SkillLab.git` in the terminal. This would download the project in the specified directory
