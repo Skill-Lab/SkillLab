@@ -1,4 +1,4 @@
-# SkillLab
+# Skill Lab
 
 ## Code Structure
 ---
@@ -30,4 +30,4 @@ Under the `client/skill_lab/src folder`, the code structure is broken down as fo
   REACT_APP_FIREBASE_APP_ID=<<Enter your own APP_ID>>
   ```
 
-On the terminal, type in `npm start` in the terminal to run the application. On a browser, go to http://localhost:3000/ browser to view the application.
+On the terminal, type in `npm start` in the terminal to run the application. On a browser, go to http://localhost:3000 browser to view the application.
