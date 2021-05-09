@@ -1,5 +1,7 @@
 # Skill Lab
 
+Our project, Skill Lab, is an online learning and networking platform that aims to connect users over shared interests or skills. By providing a web application where users can ask and answer questions in interest-specific subspaces, and become mentors, Skill Lab offers necessary guidance and accountability for all. After successfully creating our vision for this project, we expect Skill Lab to bridge the gap between professionals, students, experts, and novices in an online community. 
+
 ## Code Structure
 ---
 Under the `client/skill_lab/src folder`, the code structure is broken down as follows:
@@ -31,3 +33,12 @@ Under the `client/skill_lab/src folder`, the code structure is broken down as fo
   ```
 
 On the terminal, type in `npm start` in the terminal to run the application. On a browser, go to http://localhost:3000 browser to view the application.
+
+## Authors
+
+- Nathan Abegaz
+- Cindy Carrillo
+- Alexis Huerta
+- Brian Tao
+
+5/10/2021
