@@ -14,9 +14,8 @@ Under the `client/skill_lab/src folder`, the code structure is broken down as fo
 - `index.js`: Root file that renders the entire app
 
 ## Setup and Build Instructions: 
-
-1. Go to the project code repository [link](https://github.com/Skill-Lab/SkillLab/)
-2. Open up the terminal and changed to a directory where you would like to place the project
+1. Open up the temrinal
+2. Change to a directory where you would like to place the project
 3. Type in `git clone https://github.com/Skill-Lab/SkillLab.git` in the terminal. This would download the project in the specified directory
 4. Change directories into `client/skill_lab`. Type in `npm install` in the terminal to download all of the project’s dependencies.
 5. A local Firebase API key would be needed to run the application locally. Please follow the instruction [here](https://firebase.google.com/docs/web/setup) to learn more about creating your own API key
