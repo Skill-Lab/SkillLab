@@ -1,5 +1,7 @@
 import { Divider, Drawer, makeStyles, Toolbar } from "@material-ui/core";
-import React from "react";
+
+import React, { useEffect, useState } from "react";
+
 import ProfileList from "./ProfileList";
 import Switch from "@material-ui/core/Switch";
 
@@ -66,6 +68,7 @@ export default function RightSidebar({ description, members, doc_id }) {
         })
       );
     }
+
     //Find user
     //Update
     var docRef = db.collection("userSubspace").doc(doc_id);
@@ -75,7 +78,7 @@ export default function RightSidebar({ description, members, doc_id }) {
       })
       .then(() => {
         console.log("Document successfully updated!");
-        
+
       })
       .catch((error) => {
         // The document probably doesn't exist.
